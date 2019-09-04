@@ -3,7 +3,7 @@
 package lesson1.task1
 
 import kotlin.math.*
-
+//push
 /**
  * Пример
  *
@@ -59,7 +59,7 @@ fun main() {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = TODO()
+fun seconds(hours: Int, minutes: Int, seconds: Int) = 3600 * hours + 60 * minutes + seconds
 
 /**
  * Тривиальная
