@@ -4,6 +4,8 @@ package lesson2.task2
 
 import lesson1.task1.sqr
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -38,30 +40,19 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int) =
 /**
  * Простая
  *
+ *  ((year % 4 == 0 && year % 100) != 0 || (year % 400 == 0))
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int {
-    return when (month) {
-        1 -> 31
-        2 -> when {
-            year % 4 == 0 && year % 100 != 0 -> 29
-            year % 400 == 0 -> 29
-            else -> 28
-        }
-        3 -> 31
-        4 -> 30
-        5 -> 31
-        6 -> 30
-        7 -> 31
-        8 -> 31
-        9 -> 30
-        10 -> 31
-        11 -> 30
-        12 -> 31
-        else -> 404
+fun daysInMonth(month: Int, year: Int): Int = when (month) {
+    1, 3, 5, 7, 8, 10, 12 -> 31
+    2 -> when {
+        ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) -> 29
+        else -> 28
     }
+    else -> 30
 }
+
 
 /**
  * Средняя
@@ -87,5 +78,8 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт ab ac ba bc ca cb
  *
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
-    ((a <= r)) && (b <= s) || ((a <= r) && (c <= s)) || ((b <= r) && (a <= s)) || ((b <= r) && (c <= s)) || ((c <= r) && (a <= s)) || ((c <= r) && (b <= s))
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    val a = min(min(a, b), c)
+    val b = a + b + c - a - max(max(a, b), c)
+    return a <= min(r,s) && b <= max(r,s)
+}
