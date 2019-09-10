@@ -86,7 +86,7 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int {
+/* fun fib(n: Int): Int {
     var x = 0;
     var y = 1;
     var z = 0;
@@ -96,6 +96,12 @@ fun fib(n: Int): Int {
         y = z;
     }
     return x + y
+} */
+fun fib(n: Int): Int {
+    if (n < 3) {
+        return 1
+    }
+    return fib(n - 1) + fib(n - 2)
 }
 
 /**
@@ -208,27 +214,6 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double = TODO()
-/*{
-    var sin = x;
-    var k = 3;
-    var m = 0;
-    while (abs(pow(x, k.toDouble()) / factorial(k)) > abs(eps)) {
-        if (m == 0) {
-            sin -= pow(x, k.toDouble()) / factorial(k)
-            m++
-        } else {
-            sin += pow(x, k.toDouble()) / factorial(k)
-            m--
-        }
-
-        k += 2
-    }
-    return sin
-}
-
- */
-
-
 /**
  * Средняя
  *
