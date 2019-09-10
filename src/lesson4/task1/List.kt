@@ -3,6 +3,8 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import java.lang.Math.pow
 import kotlin.math.sqrt
 
 /**
@@ -115,14 +117,20 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double = sqrt(v.fold(0.0) { previousResult, element ->
+    previousResult + sqr(element)
+})
+
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double =
+    if (list.isNotEmpty()) list.sum() / list.size
+    else 0.0
+
 
 /**
  * Средняя
@@ -132,7 +140,13 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val x = mean(list)
+    for (i in 0 until list.size) {
+        list[i] -= x
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -151,7 +165,13 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var res = 0
+    for (i in 0 until p.size) {
+        res += p[i] * pow(x.toDouble(), i.toDouble()).toInt()
+    }
+    return res
+}
 
 /**
  * Средняя
@@ -163,7 +183,15 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    var sum = 0
+    for (i in 0 until list.size) {
+        list[i] += sum
+        sum = list[i]
+    }
+
+    return list
+}
 
 /**
  * Средняя
@@ -172,7 +200,22 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    var x = n
+    var last = 0
+    val list = mutableListOf<Int>()
+    while (x > 1) {
+        for (i in 2..x) {
+            if (x % i == 0) {
+                last = i
+                break
+            }
+        }
+        x /= last
+        list.add(last)
+    }
+    return list
+}
 
 /**
  * Сложная
@@ -181,7 +224,7 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -212,8 +255,15 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
-
+fun decimal(digits: List<Int>, base: Int): Int = TODO() /* {
+    var res = 0;
+    for (i in 0 until digits.size - 1) {
+        res += digits[i]
+        res *= base
+    }
+    return res
+}
+*/
 /**
  * Сложная
  *
@@ -236,7 +286,48 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var res: String = ""
+    when (n / 1000) {
+        1 -> res += "M"
+        2 -> res += "MM"
+        3 -> res += "MMM"
+    }
+    when (n / 100 % 10) {
+        1 -> res += "C"
+        2 -> res += "CC"
+        3 -> res += "CCC"
+        4 -> res += "CD"
+        5 -> res += "D"
+        6 -> res += "DC"
+        7 -> res += "DCC"
+        8 -> res += "DCCC"
+        9 -> res += "CM"
+    }
+    when (n / 10 % 10) {
+        1 -> res += "X"
+        2 -> res += "XX"
+        3 -> res += "XXX"
+        4 -> res += "XL"
+        5 -> res += "L"
+        6 -> res += "LX"
+        7 -> res += "LXX"
+        8 -> res += "LXXX"
+        9 -> res += "XC"
+    }
+    when (n % 10) {
+        1 -> res += "I"
+        2 -> res += "II"
+        3 -> res += "III"
+        4 -> res += "IV"
+        5 -> res += "V"
+        6 -> res += "VI"
+        7 -> res += "VII"
+        8 -> res += "VIII"
+        9 -> res += "IX"
+    }
+    return res
+}
 
 /**
  * Очень сложная
