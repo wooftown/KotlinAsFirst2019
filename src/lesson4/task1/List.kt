@@ -364,6 +364,7 @@ fun russian(n: Int): String {
         }
     } else {
         when (n / 10000 % 10) {
+            1 -> res += "десять "
             2 -> res += "двадцать "
             3 -> res += "тридцать "
             4 -> res += "сорок "
@@ -421,6 +422,7 @@ fun russian(n: Int): String {
         }
     } else {
         when (n  % 100 / 10) {
+            1 -> res += "десять "
             2 -> res += "двадцать "
             3 -> res += "тридцать "
             4 -> res += "сорок "
