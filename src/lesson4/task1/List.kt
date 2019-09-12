@@ -304,9 +304,6 @@ fun decimal(digits: List<Int>, base: Int): Int   {
  */
 
 
-/**
- * Я исправлю это уродское решение!
- * **/
 fun decimalFromString(str: String, base: Int): Int {
     var res = 0
     var x = 0
@@ -316,7 +313,8 @@ fun decimalFromString(str: String, base: Int): Int {
         } else {
             x = (str[i] - '0').toInt()
         }
-        res += x * pow(base.toDouble(),(str.length - 1 - i).toDouble()).toInt()
+        res *= base
+        res += x
     }
     return res
 }
