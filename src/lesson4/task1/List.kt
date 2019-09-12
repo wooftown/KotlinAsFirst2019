@@ -157,8 +157,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var res = 0
-    for (i in 0 until a.size){
-        res += a[i]*b[i]
+    for (i in 0 until a.size) {
+        res += a[i] * b[i]
     }
     return res
 }
@@ -271,8 +271,7 @@ fun convertToString(n: Int, base: Int): String {
     for (i in 0 until list.size) {
         if (list[i] < 10) {
             str += list[i]
-        } else
-        {
+        } else {
             str += (list[i] - 10 + 'a'.toInt()).toChar()
         }
     }
@@ -286,7 +285,7 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int   {
+fun decimal(digits: List<Int>, base: Int): Int {
     var res = 0
     for (i in 0 until digits.size) {
         res *= base
@@ -313,11 +312,11 @@ fun decimal(digits: List<Int>, base: Int): Int   {
 fun decimalFromString(str: String, base: Int): Int {
     var res = 0
     var x = 0
-    for (i in 0 until str.length){
-        if (str[i] in 'a'..'z'){
-             x = 10 + (str[i] - 'a').toInt()
+    for (i in 0 until str.length) {
+        if (str[i] in 'a'..'z') {
+            x = 10 + (str[i] - 'a')
         } else {
-            x = (str[i] - '0').toInt()
+            x = (str[i] - '0')
         }
         res *= base
         res += x
