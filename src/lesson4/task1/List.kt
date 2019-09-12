@@ -233,7 +233,20 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    var list = mutableListOf<Int>()
+    var x = n
+    if (x == 0) {
+        list.add(0)
+    }
+    while (x > 0) {
+        list.add(x % base)
+        x -= x % base
+        x /= base
+
+    }
+    return list.reversed()
+}
 
 /**
  * Сложная
@@ -409,7 +422,7 @@ fun russian(n: Int): String {
         9 -> res += "девятьсот "
     }
     if (n % 100 in 11..19) {
-        when (n  % 10) {
+        when (n % 10) {
             1 -> res += "одиннадцать "
             2 -> res += "двенадцать "
             3 -> res += "тринадцать "
@@ -421,7 +434,7 @@ fun russian(n: Int): String {
             9 -> res += "девятнадцать "
         }
     } else {
-        when (n  % 100 / 10) {
+        when (n % 100 / 10) {
             1 -> res += "десять "
             2 -> res += "двадцать "
             3 -> res += "тридцать "
