@@ -174,14 +174,10 @@ fun isCoPrime(m: Int, n: Int): Boolean = largestCoDivisor(m, n) == 1
  */
 // в разработке
 
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    val x = sqr(sqrt(m.toDouble()).toInt())
-    val y = sqr(sqrt(n.toDouble()).toInt())
-    if ((x == m) || (y == n) ||
-        (x != y)
-    ) return true
-    return false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean = (
+        (sqr(sqrt(m.toDouble()).toInt()) == m) || (sqr(sqrt(n.toDouble()).toInt()) == n) ||
+                (sqr(sqrt(n.toDouble()).toInt()) != sqr(sqrt(m.toDouble()).toInt()))
+        )
 
 /**
  * Средняя
