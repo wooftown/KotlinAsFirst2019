@@ -302,7 +302,24 @@ fun decimal(digits: List<Int>, base: Int): Int   {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+
+
+/**
+ * Я исправлю это уродское решение!
+ * **/
+fun decimalFromString(str: String, base: Int): Int {
+    var res = 0
+    var x = 0
+    for (i in 0 until str.length){
+        if (str[i] in 'a'..'z'){
+             x = 10 + (str[i] - 'a').toInt()
+        } else {
+            x = (str[i] - '0').toInt()
+        }
+        res += x * pow(base.toDouble(),(str.length - 1 - i).toDouble()).toInt()
+    }
+    return res
+}
 
 /**
  * Сложная
