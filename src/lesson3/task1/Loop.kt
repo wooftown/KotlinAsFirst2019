@@ -89,7 +89,7 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     var x = 0;
     var y = 1;
-    var z = 0;
+    var z = x;
     for (i in 1 until n) {
         z = x;
         x += y
