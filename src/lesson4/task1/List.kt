@@ -240,7 +240,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    var list = mutableListOf<Int>()
+    val list = mutableListOf<Int>()
     var x = n
     if (x == 0) {
         list.add(0)
@@ -267,7 +267,7 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     var str = ""
-    var list = convert(n, base)
+    val list = convert(n, base)
     for (i in 0 until list.size) {
         if (list[i] < 10) {
             str += list[i]
@@ -311,12 +311,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
 
 fun decimalFromString(str: String, base: Int): Int {
     var res = 0
-    var x = 0
+    var x: Int
     for (i in 0 until str.length) {
-        if (str[i] in 'a'..'z') {
-            x = 10 + (str[i] - 'a')
+        x = if (str[i] in 'a'..'z') {
+            10 + (str[i] - 'a')
         } else {
-            x = (str[i] - '0')
+            (str[i] - '0')
         }
         res *= base
         res += x
@@ -333,7 +333,7 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var res: String = ""
+    var res = ""
     when (n / 1000) {
         1 -> res += "M"
         2 -> res += "MM"
@@ -490,5 +490,5 @@ fun russian(n: Int): String {
         }
     }
 
-    return res.substring(0, res.length - 1);
+    return res.substring(0, res.length - 1)
 }
