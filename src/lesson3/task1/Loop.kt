@@ -71,7 +71,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var res: Int = 1;
+    var res = 1;
     var number = abs(n);
     while (number >= 10) {
         res++;
@@ -86,7 +86,7 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
- fun fib(n: Int): Int {
+fun fib(n: Int): Int {
     var x = 0;
     var y = 1;
     var z = 0;
@@ -98,17 +98,7 @@ fun digitNumber(n: Int): Int {
     return x + y
 }
 
-/*
 
-============= почему в тестах на котоеде это решение не работает? ==========
-
- fun fib(n: Int): Int {
-    if (n < 3) {
-        return 1
-    }
-    return fib(n - 1) + fib(n - 2)
-}
-*/
 /**
  * Простая
  *
@@ -131,9 +121,15 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
+    if (isPrime(n)) {
+        return n
+    }
     var res = 2;
-    while (n % res != 0) {
-        res++
+
+    for (i in 3..sqrt(n.toDouble()).toInt() step 2) {
+        if (n % i == 0) {
+            return i
+        }
     }
     return res
 }
@@ -174,10 +170,14 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = (
-        (sqr(sqrt(m.toDouble()).toInt()) == m) || (sqr(sqrt(n.toDouble()).toInt()) == n) ||
-                (sqr(sqrt(n.toDouble()).toInt()) != sqr(sqrt(m.toDouble()).toInt()))
-        )
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    val x = sqr(sqrt(m.toDouble()).toInt())
+    val y = sqr(sqrt(n.toDouble()).toInt())
+    if ((x == m) || (y == n) ||
+        (x != y)
+    ) return true
+    return false
+}
 
 /**
  * Средняя
@@ -237,6 +237,7 @@ fun sin(x: Double, eps: Double): Double = TODO() /* {
 }
 
 */
+
 /**
  * Средняя
  *
@@ -288,7 +289,7 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var m = n;
-    var k = n % 10;
+    val k = n % 10;
     for (i in 1..digitNumber(n)) {
         if (m % 10 != k) {
             return true
@@ -307,6 +308,8 @@ fun hasDifferentDigits(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun numberOfDigit(k: Int, n: Int): Int = k / pow(10.0, (n).toDouble()).toInt() % 10 // функция для нахождения цифры
+
 fun squareSequenceDigit(n: Int): Int {
     var k = 0
     var i = 0
@@ -316,7 +319,7 @@ fun squareSequenceDigit(n: Int): Int {
         i += digitNumber(k)
         x++
     }
-    return k / pow(10.0, (i - n).toDouble()).toInt() % 10
+    return numberOfDigit(k, i - n)
 }
 
 /**
@@ -339,5 +342,5 @@ fun fibSequenceDigit(n: Int): Int {
         x2 = x1
         x1 = k
     }
-    return k / pow(10.0, (i - n).toDouble()).toInt() % 10
+    return numberOfDigit(k, i - n)
 }

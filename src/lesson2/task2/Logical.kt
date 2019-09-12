@@ -79,7 +79,7 @@ fun circleInside(
  *
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val x = min(min(a, b), c)
-    val y = a + b + c - x - max(max(a, b), c)
+    val x = minOf(a, b, c)
+    val y = a + b + c - x - maxOf(a, b, c)
     return x <= min(r, s) && y <= max(r, s)
 }

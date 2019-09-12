@@ -146,6 +146,7 @@ class Tests {
     fun squareBetweenExists() {
         assertTrue(squareBetweenExists(1, 1))
         assertTrue(squareBetweenExists(21, 28))
+        assertTrue(squareBetweenExists(25,26 ))
         assertTrue(squareBetweenExists(36, 48))
         assertTrue(squareBetweenExists(50, 64))
         assertFalse(squareBetweenExists(51, 61))

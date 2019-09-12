@@ -155,7 +155,13 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    var res = 0
+    for (i in 0 until a.size){
+        res += a[i]*b[i]
+    }
+    return res
+}
 
 /**
  * Средняя
@@ -233,7 +239,20 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    var list = mutableListOf<Int>()
+    var x = n
+    if (x == 0) {
+        list.add(0)
+    }
+    while (x > 0) {
+        list.add(x % base)
+        x -= x % base
+        x /= base
+
+    }
+    return list.reversed()
+}
 
 /**
  * Сложная
@@ -246,7 +265,19 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    var str = ""
+    var list = convert(n, base)
+    for (i in 0 until list.size) {
+        if (list[i] < 10) {
+            str += list[i]
+        } else
+        {
+            str += (list[i] - 10 + 'a'.toInt()).toChar()
+        }
+    }
+    return str
+}
 
 /**
  * Средняя
@@ -255,15 +286,15 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO() /* {
-    var res = 0;
-    for (i in 0 until digits.size - 1) {
-        res += digits[i]
+fun decimal(digits: List<Int>, base: Int): Int   {
+    var res = 0
+    for (i in 0 until digits.size) {
         res *= base
+        res += digits[i]
     }
     return res
 }
-*/
+
 
 /**
  * Сложная
@@ -277,7 +308,22 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO() /* {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+
+
+fun decimalFromString(str: String, base: Int): Int {
+    var res = 0
+    var x = 0
+    for (i in 0 until str.length){
+        if (str[i] in 'a'..'z'){
+            x = 10 + (str[i] - 'a').toInt()
+        } else {
+            x = (str[i] - '0').toInt()
+        }
+        res *= base
+        res += x
+    }
+    return res
+}
 
 /**
  * Сложная
@@ -409,7 +455,7 @@ fun russian(n: Int): String {
         9 -> res += "девятьсот "
     }
     if (n % 100 in 11..19) {
-        when (n  % 10) {
+        when (n % 10) {
             1 -> res += "одиннадцать "
             2 -> res += "двенадцать "
             3 -> res += "тринадцать "
@@ -421,7 +467,7 @@ fun russian(n: Int): String {
             9 -> res += "девятнадцать "
         }
     } else {
-        when (n  % 100 / 10) {
+        when (n % 100 / 10) {
             1 -> res += "десять "
             2 -> res += "двадцать "
             3 -> res += "тридцать "
