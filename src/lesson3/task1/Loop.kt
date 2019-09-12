@@ -71,13 +71,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var res = 1;
-    var number = abs(n);
+    var res = 1
+    var number = abs(n)
     while (number >= 10) {
-        res++;
-        number /= 10;
+        res++
+        number /= 10
     }
-    return res;
+    return res
 }
 
 /**
@@ -87,13 +87,13 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var x = 0;
-    var y = 1;
-    var z = x;
+    var x = 0
+    var y = 1
+    var z: Int
     for (i in 1 until n) {
-        z = x;
+        z = x
         x += y
-        y = z;
+        y = z
     }
     return x + y
 }
@@ -108,9 +108,9 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     val a = min(n, m)
     val b = max(n, m)
-    var res = b;
+    var res = b
     while (res % a != 0) {
-        res += b;
+        res += b
     }
     return res
 }
@@ -154,12 +154,12 @@ fun largestCoDivisor(a: Int, b: Int): Int {
     var y = b
     while (x != y) {
         if (x > y) {
-            x -= y;
+            x -= y
         } else {
-            y -= x;
+            y -= x
         }
     }
-    return x;
+    return x
 }
 
 
@@ -196,8 +196,8 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = (
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    var k = 0;
-    var a = x;
+    var k = 0
+    var a = x
     while (a != 1) {
         if (a % 2 == 0) {
             a /= 2
@@ -206,7 +206,7 @@ fun collatzSteps(x: Int): Int {
         }
         k++
     }
-    return k;
+    return k
 }
 
 /**
@@ -257,7 +257,7 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var a = n;
+    var a = n
     var k = digitNumber(n)
     var x = 0
     for (i in 1..k) {
@@ -288,8 +288,8 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var m = n;
-    val k = n % 10;
+    var m = n
+    val k = n % 10
     for (i in 1..digitNumber(n)) {
         if (m % 10 != k) {
             return true
