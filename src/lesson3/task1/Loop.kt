@@ -121,7 +121,7 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    if (n % 2 ==0){
+    if (n % 2 == 0) {
         return 2
     }
 
@@ -153,16 +153,22 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-
-
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (res in 2..min(m, n)) {
-        if ((m % res == 0) && (n % res == 0)) {
-            return false
+/* Функция для нахождения НОД */
+fun largestCoDivisor(a: Int, b: Int): Int {
+    var x = a
+    var y = b
+    while (x != y) {
+        if (x > y) {
+            x -= y;
+        } else {
+            y -= x;
         }
     }
-    return true
+    return x;
 }
+
+
+fun isCoPrime(m: Int, n: Int): Boolean = largestCoDivisor(m, n) == 1
 
 /**
  * Простая
