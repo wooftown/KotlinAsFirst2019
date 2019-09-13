@@ -179,9 +179,11 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = (
                 (sqr(sqrt(n.toDouble()).toInt()) != sqr(sqrt(m.toDouble()).toInt()))
         )
 */
-fun squareBetweenExists(m: Int, n: Int): Boolean =
-    ((floor(sqrt(m.toDouble())) != floor(sqrt(n.toDouble()))) || (ceil(sqrt(m.toDouble())) != ceil(sqrt(n.toDouble())))
-            || (m == n && sqrt(m.toDouble()) == floor(sqrt(m.toDouble()))))
+fun squareBetweenExists(m: Int, n: Int): Boolean = (
+        (floor(sqrt(m.toDouble())) != floor(sqrt(n.toDouble()))) ||
+                (ceil(sqrt(m.toDouble())) != ceil(sqrt(n.toDouble())))
+                || (m == n && sqrt(m.toDouble()) == floor(sqrt(m.toDouble())))
+        )
 
 /**
  * Средняя
