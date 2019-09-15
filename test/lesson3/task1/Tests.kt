@@ -84,7 +84,7 @@ class Tests {
         assertEquals(102334155, fib(40))
         assertEquals(1134903170, fib(45))
         assertEquals(1836311903, fib(46))
-        // Just to calculate it
+
         fib(50)
     }
 
@@ -146,7 +146,7 @@ class Tests {
     fun squareBetweenExists() {
         assertTrue(squareBetweenExists(1, 1))
         assertTrue(squareBetweenExists(21, 28))
-        assertTrue(squareBetweenExists(25,26 ))
+        assertTrue(squareBetweenExists(25, 26))
         assertTrue(squareBetweenExists(36, 48))
         assertTrue(squareBetweenExists(50, 64))
         assertFalse(squareBetweenExists(51, 61))
