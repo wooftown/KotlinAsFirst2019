@@ -254,7 +254,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.toList().all {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val remap = mutableMapOf<String, Int>()
-    for (i in list){
+    for (i in list) {
         remap[i] = (remap[i] ?: 0) + 1
     }
     return remap.filter { it.value > 1 }
@@ -382,4 +382,13 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String>  = TODO () /*{
+    var set = emptySet<String>()
+    val map = mutableMapOf<String, Double>()
+    for ((name, pair) in treasures) {
+        map[name] = pair.second.toDouble() / pair.first.toDouble()
+    }
+    val list = map.toList().sortedByDescending { (string, double) -> double }
+    return set
+}
+*/
