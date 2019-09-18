@@ -113,7 +113,14 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for (key in a.keys) {
+        if (a[key] != b[key]) {
+            return false
+        }
+    }
+    return true
+}
 
 /**
  * Простая
@@ -129,7 +136,13 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+    for ((key, value) in b) {
+        if (a[key] == value) {
+            a.remove(key)
+        }
+    }
+}
 
 /**
  * Простая
@@ -138,7 +151,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TO
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.filter { it in b }.toSet().toList()
 
 /**
  * Средняя
@@ -157,7 +170,19 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val remap = mapA.toMutableMap()
+    for ((key, value) in mapB) {
+        if (remap[key] == null) {
+            remap[key] = value
+        } else {
+            if (remap[key] != value) {
+                remap[key] = remap[key] + ", " + value
+            }
+        }
+    }
+    return remap
+}
 
 /**
  * Средняя
@@ -169,7 +194,20 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val map = mutableMapOf<String, Double>()
+    val map2 = mutableMapOf<String, Int>()
+    for ((i, j) in stockPrices) {
+        map[i] = (map[i] ?: 0.0) + j
+
+        map2[i] = (map2[i] ?: 0) + 1
+
+    }
+    for (i in map.keys) {
+        map[i] = map[i]!! / map2[i]!!
+    }
+    return map
+}
 
 /**
  * Средняя
@@ -186,7 +224,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? =
+    stuff.filter { (key, value) -> kind == value.first }.minBy { (key, value) -> value.second }?.key
+
 
 /**
  * Средняя
@@ -197,7 +237,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.toList().all { it in chars }
+
 
 /**
  * Средняя
@@ -211,7 +252,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val remap = mutableMapOf<String, Int>()
+    for (i in list){
+        remap[i] = (remap[i] ?: 0) + 1
+    }
+    return remap.filter { it.value > 1 }
+}
 
 /**
  * Средняя
@@ -222,7 +269,17 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    val list = mutableListOf<List<Char>>()
+    for (i in words) {
+        val temp = i.toList().sorted()
+        if (list.contains(temp)) {
+            return true
+        }
+        list += temp
+    }
+    return false
+}
 
 /**
  * Сложная
@@ -267,8 +324,43 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in list) {
+        val templist = list - i
+        if (templist.contains(number - i)) {
+            return Pair(list.indexOf(i), list.indexOf(number - i))
+        }
+    }
+    return Pair(-1, -1)
+}
 
+/*
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+
+    val map = mutableMapOf<Int, Int>()
+    for (i in 0 until list.size) {
+        if (map.containsValue(number - list[i])) {
+            for ((key, value) in map) {
+                if (value == number - list[i]) {
+                    return Pair(key, i)
+                }
+            }
+        }
+        map.put(i, list[i])
+    }
+    return Pair(-1, -1)
+}
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0 until list.size) {
+        for (j in i + 1 until list.size) {
+            if (list[i] + list[j] == number) {
+                return Pair(i, j)
+            }
+        }
+    }
+    return Pair(-1, -1)
+}
+*/
 /**
  * Очень сложная
  *
