@@ -225,7 +225,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? =
-    stuff.filter { (key, value) -> kind == value.first }.minBy { (key, value) -> value.second }?.key
+    stuff.filter { (_, value) -> kind == value.first }.minBy { (_, value) -> value.second }?.key
 
 
 /**
@@ -317,6 +317,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     return remap
 }
 */
+
 /**
  * Сложная
  *
@@ -399,12 +400,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     for ((name, pair) in treasures) {
         map[name] = pair.second.toDouble() / pair.first.toDouble()
     }
-    val list = map.toList().sortedByDescending { (string, double) -> double }
-    val nameList = mutableListOf<String>()
-    for ((first) in list) {
-        nameList += first
-    }
-    for (i in nameList) {
+    val list = map.toList().sortedByDescending { (_, double) -> double }
+    for ((i, _) in list) {
         if ((treasures[i] ?: error("")).first <= capaleft) {
             set.add(i)
             capaleft -= (treasures[i] ?: error("")).first
@@ -412,3 +409,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
     return set.toSet()
 }
+
+
+/*   val nameList = mutableListOf<String>()
+   for ((first) in list) {
+       nameList += first
+   }*/
