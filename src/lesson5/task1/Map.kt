@@ -136,7 +136,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     for ((key, value) in b) {
         if (a[key] == value) {
             a.remove(key)
@@ -394,9 +394,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    var set = setOf<String>()
+/*fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val set = mutableSetOf<String>()
     val map = mutableMapOf<String, Double>()
+
     for ((name, pair) in treasures) {
         map[name] = pair.second.toDouble() / pair.first.toDouble()
     }
@@ -409,9 +410,18 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
     return set.toSet()
 }
+ */
 
-
-/*   val nameList = mutableListOf<String>()
-   for ((first) in list) {
-       nameList += first
-   }*/
+//val map = treasures.toList().sortedByDescending { (z, x) -> x.second.toDouble() / x.first.toDouble() }
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val set = mutableSetOf<String>()
+    var capaleft = capacity
+    for ((name, value) in treasures.toList().sortedByDescending
+    { (z, x) -> x.second.toDouble() / x.first.toDouble() }) {
+        if (value.first <= capaleft) {
+            set += name
+            capaleft -= value.first
+        }
+    }
+    return set.toSet()
+}
