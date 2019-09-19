@@ -393,6 +393,21 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
+// понял что тут нужен не жадный алгоритм
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val set = mutableSetOf<String>()
+    var cap1 = capacity
+    for ((name, value) in treasures.toList().sortedByDescending
+    { (_, x) -> x.second.toDouble() / x.first.toDouble() }) {
+        if (value.first <= cap1) {
+            set += name
+            cap1 -= value.first
+        }
+    }
+    return set.toSet()
+}
+
+
 /*fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val set = mutableSetOf<String>()
     val map = mutableMapOf<String, Double>()
@@ -413,17 +428,3 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 
 //val map = treasures.toList().sortedByDescending { (z, x) -> x.second.toDouble() / x.first.toDouble() }
 
-// Алгоритм настолко плохой , что даже не может пройти рандом тест на время? =(
-
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val set = mutableSetOf<String>()
-    var cap1 = capacity
-    for ((name, value) in treasures.toList().sortedByDescending
-    { (_, x) -> x.second.toDouble() / x.first.toDouble() }) {
-        if (value.first <= cap1) {
-            set += name
-            cap1 -= value.first
-        }
-    }
-    return set.toSet()
-}
