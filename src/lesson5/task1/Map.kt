@@ -338,8 +338,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in list) {
-        val templist = list - i
-        if (templist.contains(number - i)) {
+        if ((list - i).contains(number - i)) {
             return Pair(list.indexOf(i), list.indexOf(number - i))
         }
     }
@@ -413,14 +412,17 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 
 //val map = treasures.toList().sortedByDescending { (z, x) -> x.second.toDouble() / x.first.toDouble() }
+
+// Алгоритм настолко плохой , что даже не может пройти рандом тест на время? =(
+
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val set = mutableSetOf<String>()
-    var capaleft = capacity
+    var cap1 = capacity
     for ((name, value) in treasures.toList().sortedByDescending
-    { (z, x) -> x.second.toDouble() / x.first.toDouble() }) {
-        if (value.first <= capaleft) {
+    { (_, x) -> x.second.toDouble() / x.first.toDouble() }) {
+        if (value.first <= cap1) {
             set += name
-            capaleft -= value.first
+            cap1 -= value.first
         }
     }
     return set.toSet()

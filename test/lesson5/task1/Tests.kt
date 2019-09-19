@@ -329,6 +329,13 @@ class Tests {
                 450
             )
         )
+        assertEquals(
+            emptySet<String>(),
+            bagPacking(
+                mapOf(),
+                450
+            )
+        )
     }
 
     // TODO: map task tests
