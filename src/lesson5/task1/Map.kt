@@ -402,13 +402,12 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         var maxCash = map[i - 1]!!.second
         var maxSet = map[i - 1]!!.first
         for ((name, pair) in treasures) {
-            val j = i - pair.first
-            if (j >= 0) {
-                if (name !in map[j]!!.first) {
-                    val cash = pair.second + map[j]!!.second
+            if (i - pair.first >= 0) {
+                if (name !in map[i - pair.first]!!.first) {
+                    val cash = pair.second + map[i - pair.first]!!.second
                     if (cash > maxCash) {
                         maxCash = cash
-                        maxSet = map[j]!!.first + name
+                        maxSet = map[i - pair.first]!!.first + name
                     }
                 }
             }
