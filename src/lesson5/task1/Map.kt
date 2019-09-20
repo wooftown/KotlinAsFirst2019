@@ -395,36 +395,31 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  */
 // понял что тут нужен не жадный алгоритм
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val set = mutableSetOf<String>()
-    var cap1 = capacity
-    for ((name, value) in treasures.toList().sortedByDescending
-    { (_, x) -> x.second.toDouble() / x.first.toDouble() }) {
-        if (value.first <= cap1) {
-            set += name
-            cap1 -= value.first
+    val map = mutableMapOf<Int, Pair<Set<String>, Int>>()
+    var set = emptySet<String>()
+    map[0] = Pair(emptySet(), 0)
+    for (i in 1 until capacity) {
+        var maxCash = map[i - 1]!!.second
+        var maxSet = map[i - 1]!!.first
+        for ((name, pair) in treasures) {
+            val j = i - pair.first
+            if (j >= 0) {
+                if (name !in map[j]!!.first) {
+                    val cur = pair.second + map[j]!!.second
+                    if (cur > maxCash) {
+                        maxCash = cur
+                        maxSet = map[j]!!.first + name
+                    }
+                }
+            }
         }
+        map[i] = Pair(maxSet, maxCash)
+        set = maxSet
+
     }
-    return set.toSet()
+    return set
 }
 
 
-/*fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val set = mutableSetOf<String>()
-    val map = mutableMapOf<String, Double>()
 
-    for ((name, pair) in treasures) {
-        map[name] = pair.second.toDouble() / pair.first.toDouble()
-    }
-    var capaleft = capacity
-    for ((i, _) in map.toList().sortedByDescending { (_, double) -> double }) {
-        if ((treasures[i] ?: error("")).first <= capaleft) {
-            set += i
-            capaleft -= (treasures[i] ?: error("")).first
-        }
-    }
-    return set.toSet()
-}
- */
-
-//val map = treasures.toList().sortedByDescending { (z, x) -> x.second.toDouble() / x.first.toDouble() }
 
