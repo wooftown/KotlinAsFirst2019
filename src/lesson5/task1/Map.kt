@@ -405,9 +405,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             val j = i - pair.first
             if (j >= 0) {
                 if (name !in map[j]!!.first) {
-                    val cur = pair.second + map[j]!!.second
-                    if (cur > maxCash) {
-                        maxCash = cur
+                    val cash = pair.second + map[j]!!.second
+                    if (cash > maxCash) {
+                        maxCash = cash
                         maxSet = map[j]!!.first + name
                     }
                 }
