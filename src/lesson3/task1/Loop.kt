@@ -2,7 +2,6 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
 import java.lang.Math.pow
 import kotlin.math.*
 
@@ -225,14 +224,14 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    val x = x % (2 * PI)
-    var sin = x;
+    val a = x % (2 * PI)
+    var sin = a
     var k = 1
-    var next = -x * (x * x) / ((k + 1) * (k + 2))
+    var next = -a * (a * a) / ((k + 1) * (k + 2))
     while (abs(next) > abs(eps)) {
         sin += next
         k += 2
-        next = -next * (x * x) / ((k + 1) * (k + 2))
+        next = -next * (a * a) / ((k + 1) * (k + 2))
 
     }
     return sin
@@ -249,18 +248,19 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    val x = x % (2 * PI)
-    var cos = 1.0;
+    val a = x % (2 * PI)
+    var cos = 1.0
     var k = 0
-    var next = -(x * x) / ((k + 1) * (k + 2))
+    var next = -(a * a) / ((k + 1) * (k + 2))
     while (abs(next) > abs(eps)) {
         cos += next
         k += 2
-        next = -next * (x * x) / ((k + 1) * (k + 2))
+        next = -next * (a * a) / ((k + 1) * (k + 2))
 
     }
     return cos
 }
+
 /**
  * Средняя
  *
