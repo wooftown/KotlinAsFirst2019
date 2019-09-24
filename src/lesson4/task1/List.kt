@@ -208,10 +208,10 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  */
 fun factorize(n: Int): List<Int> {
     var x = n
-    var last = 0
+    var last = 2
     val list = mutableListOf<Int>()
     while (x > 1) {
-        for (i in 2..x) {
+        for (i in last..x) {
             if (x % i == 0) {
                 last = i
                 break
@@ -247,7 +247,6 @@ fun convert(n: Int, base: Int): List<Int> {
     }
     while (x > 0) {
         list.add(x % base)
-        x -= x % base
         x /= base
 
     }
@@ -334,43 +333,17 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var res = ""
-    when (n / 1000) {
-        1 -> res += "M"
-        2 -> res += "MM"
-        3 -> res += "MMM"
-    }
-    when (n / 100 % 10) {
-        1 -> res += "C"
-        2 -> res += "CC"
-        3 -> res += "CCC"
-        4 -> res += "CD"
-        5 -> res += "D"
-        6 -> res += "DC"
-        7 -> res += "DCC"
-        8 -> res += "DCCC"
-        9 -> res += "CM"
-    }
-    when (n / 10 % 10) {
-        1 -> res += "X"
-        2 -> res += "XX"
-        3 -> res += "XXX"
-        4 -> res += "XL"
-        5 -> res += "L"
-        6 -> res += "LX"
-        7 -> res += "LXX"
-        8 -> res += "LXXX"
-        9 -> res += "XC"
-    }
-    when (n % 10) {
-        1 -> res += "I"
-        2 -> res += "II"
-        3 -> res += "III"
-        4 -> res += "IV"
-        5 -> res += "V"
-        6 -> res += "VI"
-        7 -> res += "VII"
-        8 -> res += "VIII"
-        9 -> res += "IX"
+    val romans = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    val arabs = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    var x = n
+    var index = 0
+    while (x > 0) {
+        if (x >= arabs[index]) {
+            res += romans[index]
+            x -= arabs[index]
+        } else {
+            index++
+        }
     }
     return res
 }
@@ -383,76 +356,76 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-fun hundreds(n: Int): String = when (n / 100) {
-    1 -> "сто "
-    2 -> "двести "
-    3 -> "триста "
-    4 -> "четыреста "
-    5 -> "пятьсот "
-    6 -> "шестьсот "
-    7 -> "семьсот "
-    8 -> "восемьсот "
-    9 -> "девятьсот "
-    else -> ""
-}
-
-fun teens(n: Int): String = when (n % 10) {
-    1 -> "одиннадцать "
-    2 -> "двенадцать "
-    3 -> "тринадцать "
-    4 -> "четырнадцать "
-    5 -> "пятнадцать "
-    6 -> "шестнадцать "
-    7 -> "семнадцать "
-    8 -> "восемнадцать "
-    else -> "девятнадцать "
-}
-
-fun tensAndUnits(n: Int, flag: Int): String {
-    var res = ""
-    when (n / 10 % 10) {
-        1 -> res += "десять "
-        2 -> res += "двадцать "
-        3 -> res += "тридцать "
-        4 -> res += "сорок "
-        5 -> res += "пятьдесят "
-        6 -> res += "шестьдесят "
-        7 -> res += "семьдесят "
-        8 -> res += "восемьдесят "
-        9 -> res += "девяносто "
-    }
-    when (n % 10) {
-        1 -> res += if (flag == 0) {
-            "одна "
-        } else {
-            "один "
-        }
-        2 -> res += if (flag == 0) {
-            "две "
-        } else {
-            "два "
-        }
-        3 -> res += "три "
-        4 -> res += "четыре "
-        5 -> res += "пять "
-        6 -> res += "шесть "
-        7 -> res += "семь "
-        8 -> res += "восемь "
-        9 -> res += "девять "
-    }
-    return res
-}
 
 fun russian(n: Int): String {
     var res = ""
     val n1 = n / 1000
     val n2 = n % 1000
+    val hundreds = listOf(
+        "",
+        "сто ",
+        "двести ",
+        "триста ",
+        "четыреста ",
+        "пятьсот ",
+        "шестьсот ",
+        "семьсот ",
+        "восемьсот ",
+        "девятьсот "
+    )
+    val teens = listOf(
+        "",
+        "одиннадцать ",
+        "двенадцать ",
+        "тринадцать ",
+        "четырнадцать ",
+        "пятнадцать ",
+        "шестнадцать ",
+        "семнадцать ",
+        "восемнадцать ",
+        "девятнадцать "
+    )
+    val tens = listOf(
+        "",
+        "десять ",
+        "двадцать ",
+        "тридцать ",
+        "сорок ",
+        "пятьдесят ",
+        "шестьдесят ",
+        "семьдесят ",
+        "восемьдесят ",
+        "девяносто "
+    )
+    val unitsthousands = listOf(
+        "",
+        "одна ",
+        "две ",
+        "три ",
+        "четыре ",
+        "пять ",
+        "шесть ",
+        "семь ",
+        "восемь ",
+        "девять "
+    )
+    val units = listOf(
+        "",
+        "один ",
+        "два ",
+        "три ",
+        "четыре ",
+        "пять ",
+        "шесть ",
+        "семь ",
+        "восемь ",
+        "девять "
+    )
 
-    res += hundreds(n1)
-    res += if (n1 % 100 in 11..19) {
-        teens(n1)
+    if (n1 % 100 in 11..19) {
+        res += hundreds[n1 / 100] + teens[n1 % 10]
     } else {
-        tensAndUnits(n1, 0)
+        res += hundreds[n1 / 100] + tens[n1 / 10 % 10] + unitsthousands[n1 % 10]
     }
 
     if ((n1 % 10 == 1) && (n1 % 100 !in 11..19)) {
@@ -466,12 +439,12 @@ fun russian(n: Int): String {
             }
         }
     }
-
-    res += hundreds(n2)
-    res += if (n2 % 100 in 11..19) {
-        teens(n2)
+    if (n2 % 100 in 11..19) {
+        res += hundreds[n2 / 100] + teens[n2 % 10]
     } else {
-        tensAndUnits(n2, 1)
+        res += hundreds[n2 / 100] + tens[n2 / 10 % 10] + units[n2 % 10]
     }
+
     return res.substring(0, res.length - 1)
+
 }
