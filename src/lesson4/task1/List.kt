@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import java.lang.Math.*
+import java.util.*
 import kotlin.math.sqrt
 
 /**
@@ -242,14 +243,10 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     val list = mutableListOf<Int>()
     var x = n
-    if (x == 0) {
-        list.add(0)
-    }
-    while (x > 0) {
+    do {
         list.add(x % base)
         x /= base
-
-    }
+    } while (x > 0)
     return list.reversed()
 }
 
@@ -264,7 +261,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
+/*fun convertToString(n: Int, base: Int): String {
     var str = ""
     val list = convert(n, base)
     for (i in 0 until list.size) {
@@ -275,6 +272,19 @@ fun convertToString(n: Int, base: Int): String {
         }
     }
     return str
+}
+*/
+fun convertToString(n: Int, base: Int): String {
+    val resultList = mutableListOf<String>()
+    val list = convert(n, base)
+    for (i in list) {
+        if (i < 10) {
+            resultList.add(i.toString())
+        } else {
+            resultList.add(((i - 10 + 'a'.toInt()).toChar()).toString())
+        }
+    }
+    return resultList.joinToString("")
 }
 
 /**
@@ -332,20 +342,20 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var res = ""
+    val res = mutableListOf<String>()
     val romans = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     val arabs = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     var x = n
     var index = 0
     while (x > 0) {
         if (x >= arabs[index]) {
-            res += romans[index]
+            res.add(romans[index])
             x -= arabs[index]
         } else {
             index++
         }
     }
-    return res
+    return res.joinToString("")
 }
 
 /**
@@ -358,93 +368,100 @@ fun roman(n: Int): String {
 
 
 fun russian(n: Int): String {
-    var res = ""
+    val res = mutableListOf<String>()
     val n1 = n / 1000
     val n2 = n % 1000
     val hundreds = listOf(
         "",
-        "сто ",
-        "двести ",
-        "триста ",
-        "четыреста ",
-        "пятьсот ",
-        "шестьсот ",
-        "семьсот ",
-        "восемьсот ",
-        "девятьсот "
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
     )
     val teens = listOf(
         "",
-        "одиннадцать ",
-        "двенадцать ",
-        "тринадцать ",
-        "четырнадцать ",
-        "пятнадцать ",
-        "шестнадцать ",
-        "семнадцать ",
-        "восемнадцать ",
-        "девятнадцать "
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
     )
     val tens = listOf(
         "",
-        "десять ",
-        "двадцать ",
-        "тридцать ",
-        "сорок ",
-        "пятьдесят ",
-        "шестьдесят ",
-        "семьдесят ",
-        "восемьдесят ",
-        "девяносто "
+        "десять",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
     )
     val unitsthousands = listOf(
         "",
-        "одна ",
-        "две ",
-        "три ",
-        "четыре ",
-        "пять ",
-        "шесть ",
-        "семь ",
-        "восемь ",
-        "девять "
+        "одна",
+        "две",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
     )
     val units = listOf(
         "",
-        "один ",
-        "два ",
-        "три ",
-        "четыре ",
-        "пять ",
-        "шесть ",
-        "семь ",
-        "восемь ",
-        "девять "
+        "один",
+        "два",
+        "три",
+        "четыре",
+        "пять",
+        "шесть",
+        "семь",
+        "восемь",
+        "девять"
     )
 
     if (n1 % 100 in 11..19) {
-        res += hundreds[n1 / 100] + teens[n1 % 10]
+        res.add(hundreds[n1 / 100])
+        res.add(teens[n1 % 10])
     } else {
-        res += hundreds[n1 / 100] + tens[n1 / 10 % 10] + unitsthousands[n1 % 10]
+        res.add(hundreds[n1 / 100])
+        res.add(tens[n1 / 10 % 10])
+        res.add(unitsthousands[n1 % 10])
     }
 
     if ((n1 % 10 == 1) && (n1 % 100 !in 11..19)) {
-        res += "тысяча "
+        res.add("тысяча")
     } else {
         if ((n1 % 10 in 2..4) && (n1 % 100 !in 11..19)) {
-            res += "тысячи "
+            res.add("тысячи")
         } else {
             if (n1 > 0) {
-                res += "тысяч "
+                res.add("тысяч")
             }
         }
     }
     if (n2 % 100 in 11..19) {
-        res += hundreds[n2 / 100] + teens[n2 % 10]
+        res.add(hundreds[n2 / 100])
+        res.add(teens[n2 % 10])
     } else {
-        res += hundreds[n2 / 100] + tens[n2 / 10 % 10] + units[n2 % 10]
+        res.add(hundreds[n2 / 100])
+        res.add(tens[n2 / 10 % 10])
+        res.add(units[n2 % 10])
     }
 
-    return res.substring(0, res.length - 1)
+    res.removeAll(Collections.singleton("")) // Удаляет все "" из списка
+    return res.joinToString(" ")
 
 }

@@ -228,12 +228,12 @@ fun sin(x: Double, eps: Double): Double {
     var sin = a
     var k = 1
     var next = -a * (a * a) / ((k + 1) * (k + 2))
-    while (abs(next) > abs(eps)) {
+    do {
         sin += next
         k += 2
         next = -next * (a * a) / ((k + 1) * (k + 2))
 
-    }
+    } while (abs(next) > eps)
     return sin
 }
 
@@ -252,12 +252,12 @@ fun cos(x: Double, eps: Double): Double {
     var cos = 1.0
     var k = 0
     var next = -(a * a) / ((k + 1) * (k + 2))
-    while (abs(next) > abs(eps)) {
+    do {
         cos += next
         k += 2
         next = -next * (a * a) / ((k + 1) * (k + 2))
 
-    }
+    } while (abs(next) > eps)
     return cos
 }
 

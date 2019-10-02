@@ -93,12 +93,8 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val res = mutableMapOf<Int, MutableList<String>>()
-    var namelist: MutableList<String>?
     for ((name, grade) in grades) {
-        namelist = res[grade]
-        if (namelist != null) namelist.add(name)
-        else namelist = mutableListOf(name)
-        res[grade] = namelist
+        res.getOrPut(grade, { mutableListOf() }).add(name)
     }
     return res
 }
@@ -306,18 +302,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO() /* {
-    var remap = friends.toMutableMap()
-    for ((i, j) in friends) {
-        for (name in j) {
-            if (i !in remap[name]!!) {
-                remap[name] = remap[name]!! + (i)
-            }
-        }
-    }
-    return remap
-}
-*/
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
 /**
  * Сложная
@@ -345,33 +330,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     return Pair(-1, -1)
 }
 
-/*
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-
-    val map = mutableMapOf<Int, Int>()
-    for (i in 0 until list.size) {
-        if (map.containsValue(number - list[i])) {
-            for ((key, value) in map) {
-                if (value == number - list[i]) {
-                    return Pair(key, i)
-                }
-            }
-        }
-        map.put(i, list[i])
-    }
-    return Pair(-1, -1)
-}
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in 0 until list.size) {
-        for (j in i + 1 until list.size) {
-            if (list[i] + list[j] == number) {
-                return Pair(i, j)
-            }
-        }
-    }
-    return Pair(-1, -1)
-}
-*/
 /**
  * Очень сложная
  *
@@ -398,7 +356,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val map = mutableMapOf<Int, Pair<Set<String>, Int>>()
     var set = emptySet<String>()
     map[0] = Pair(emptySet(), 0)
-    for (i in 1 until capacity+1) {
+    for (i in 1 until capacity + 1) {
         var maxCash = map[i - 1]!!.second
         var maxSet = map[i - 1]!!.first
         for ((name, pair) in treasures) {
