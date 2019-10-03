@@ -302,9 +302,9 @@ fun mostExpensive(description: String): String {
     val list = description.split("; ")
     var res = ""
     var max = -0.1
-    for (i in list){
+    for (i in list) {
         val nextList = i.split(" ")
-        if (nextList[1].toDouble() > max){
+        if (nextList[1].toDouble() > max) {
             max = nextList[1].toDouble()
             res = nextList[0]
         }
@@ -323,7 +323,47 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    if (!roman.matches(Regex("""^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"""))) {
+        return -1
+    }
+    val romanToInt = mapOf(
+        "I" to 1,
+        "IV" to 4,
+        "V" to 5,
+        "IX" to 9,
+        "X" to 10,
+        "XL" to 40,
+        "L" to 50,
+        "XC" to 90,
+        "C" to 100,
+        "CD" to 400,
+        "D" to 500,
+        "CM" to 900,
+        "M" to 1000
+    )
+    val subtractionList = listOf(
+        "IV", "IX", "XL", "XC", "CD", "CM"
+    )
+    var result = 0
+    var index = 0
+    while (index != roman.length) {
+        val oneSymbol = roman.substring(index, index + 1)
+        val twoSymbols = try {
+            roman.substring(index, index + 2)
+        } catch (e: StringIndexOutOfBoundsException) {
+            ""
+        }
+        if (twoSymbols in subtractionList) {
+            result += romanToInt.getValue(twoSymbols)
+            index += 2
+        } else {
+            result += romanToInt.getValue(oneSymbol)
+            index++
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная
