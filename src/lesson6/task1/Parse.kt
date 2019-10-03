@@ -3,8 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import lesson5.task1.canBuildFrom
-import javax.xml.stream.events.StartDocument
 
 /**
  * Пример
@@ -175,7 +173,7 @@ fun dateDigitToStr(digital: String): String {
  *
  */
 fun flattenPhoneNumber(phone: String): String =
-    if (!phone.matches(Regex("""[ \s]?[+]?[0-9 -]+([(][0-9 -]+[)])?[0-9 -]+"""))) {
+    if (!phone.matches(Regex("""[ \s]?[+]?[\d -]+([(][\d -]+[)])?[\d -]+"""))) {
         ""
     } else {
         val list = listOf('-', '(', ')', ' ')
@@ -227,7 +225,7 @@ fun bestLongJump(jumps: String): Int {
  * (\d+[ ]*[%+ -]+)+
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""([0-9]+[ ]*[%+ -]+)+"""))) {
+    if (!jumps.matches(Regex("""(\d+[ ]*[%+ -]+)+"""))) {
         return -1
     }
     val list = jumps.split(' ')
