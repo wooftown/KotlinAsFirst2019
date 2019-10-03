@@ -100,6 +100,7 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { plusMinus("4 - + 12") }
     }
 
+
     @Test
     @Tag("Hard")
     fun firstDuplicateIndex() {
