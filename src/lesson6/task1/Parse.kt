@@ -173,7 +173,7 @@ fun dateDigitToStr(digital: String): String {
  *
  */
 fun flattenPhoneNumber(phone: String): String =
-    if (!phone.matches(Regex("""[ \s]?[+]?[\d -]+([(][\d -]+[)])?[\d -]+"""))) {
+    if (!phone.matches(Regex("""[ \s]?[+]?[\d -]*([(][\d -]+[)])?[\d -]+"""))) {
         ""
     } else {
         val list = listOf('-', '(', ')', ' ')
@@ -324,7 +324,7 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    if (!roman.matches(Regex("""^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"""))) {
+    if ((!roman.matches(Regex("""^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"""))) || (roman == "")) {
         return -1
     }
     val romanToInt = mapOf(
