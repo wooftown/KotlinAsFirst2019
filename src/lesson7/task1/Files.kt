@@ -6,6 +6,7 @@ import java.io.File
 import kotlin.math.ceil
 import kotlin.math.log10
 import kotlin.math.max
+import kotlin.math.min
 
 
 /**
@@ -529,7 +530,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             outt.newLine()
             outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-" + curDivisor)
             outt.newLine()
-            outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(max))
+            outt.write(" ".repeat(spaces - 1 + max(lengthOfNumber(cur) , lengthOfNumber(curDivisor))-min(lengthOfNumber(cur) , lengthOfNumber(curDivisor))) + "-".repeat(max))
             outt.newLine()
         }
         spaces += lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
