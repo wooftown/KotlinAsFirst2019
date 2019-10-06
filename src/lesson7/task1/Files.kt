@@ -403,12 +403,8 @@ fun markdownToHtml(inputName: String, outputName: String) {
 2350
  *
  */
-fun digitsInInt(x: Int) = if (x == 0) {
-    1
-} else {
-    ceil(log10(x.toDouble())).toInt()
-}
 
+fun lengthOfNumber(x: Int): Int = x.toString().length
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x
     val list = mutableListOf<Int>()
@@ -423,18 +419,18 @@ fun multiplicationList(x: Int, lhv: Int): List<Int> {
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 
     val res = lhv * rhv
-    val place = digitsInInt(res) + 1
+    val place = lengthOfNumber(res) + 1
     val list = multiplicationList(rhv, lhv)
     File(outputName).bufferedWriter().use {
-        it.write(" ".repeat(place - digitsInInt(lhv)) + lhv)
+        it.write(" ".repeat(place - lengthOfNumber(lhv)) + lhv)
         it.newLine()
-        it.write("*" + " ".repeat(place - digitsInInt(rhv) - 1) + rhv)
+        it.write("*" + " ".repeat(place - lengthOfNumber(rhv) - 1) + rhv)
         it.newLine()
         it.write("-".repeat(place))
         it.newLine()
 
-        for (i in 0 until digitsInInt(rhv)) {
-            val count = digitsInInt(list[i])
+        for (i in 0 until lengthOfNumber(rhv)) {
+            val count = lengthOfNumber(list[i])
             if (i == 0) {
                 it.write(" ".repeat(place - count) + list[i])
 
@@ -445,7 +441,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         it.write("-".repeat(place))
         it.newLine()
-        it.write(" ".repeat(place - digitsInInt(res)) + res)
+        it.write(" ".repeat(place - lengthOfNumber(res)) + res)
 
         it.close()
     }
@@ -482,7 +478,6 @@ fun numberToList(x: Int): List<Int> {
     return res
 }
 
-fun lengthOfNumber(x: Int): Int = x.toString().length
 
 fun firstDivisor(x: Int, y: Int): Int {
     var a = 0
@@ -520,24 +515,21 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         cur = cur * 10 + x[index]
         curDivisor = cur / rhv * rhv
         if (trigger) {
+            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur)+1)
             outt.write(" ".repeat(spaces) + "0" + cur)
             outt.newLine()
             outt.write(" ".repeat(spaces) + "-" + curDivisor)
             outt.newLine()
-            val max = max(1 + lengthOfNumber(curDivisor),lengthOfNumber(cur))
             outt.write(" ".repeat(spaces) + "-".repeat(max))
             outt.newLine()
             spaces++
         } else {
+            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur))
             outt.write(" ".repeat(spaces) + cur)
             outt.newLine()
             outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-" + curDivisor)
             outt.newLine()
-            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur))
-            outt.write(
-                " ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(max
-                )
-            )
+            outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(max))
             outt.newLine()
         }
         spaces += lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
