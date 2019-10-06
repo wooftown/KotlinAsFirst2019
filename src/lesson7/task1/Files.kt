@@ -3,6 +3,9 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.ceil
+import kotlin.math.log10
+
 
 /**
  * Пример
@@ -149,7 +152,6 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Средняя
  *
  * Реализовать транслитерацию текста из входного файла в выходной файл посредством динамически задаваемых правил.
-
  * Во входном файле с именем inputName содержится некоторый текст (в том числе, и на русском языке).
  *
  * В ассоциативном массиве dictionary содержится словарь, в котором некоторым символам
@@ -202,7 +204,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Остроумный
  * БелогЛазый
  * ФиолетОвый
-
  * Соответствующий выходной файл:
  * Карминовый, Некрасивый
  *
@@ -239,20 +240,19 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
  * Пример входного файла:
 Lorem ipsum *dolor sit amet*, consectetur **adipiscing** elit.
 Vestibulum lobortis, ~~Est vehicula rutrum *suscipit*~~, ipsum ~~lib~~ero *placerat **tortor***,
-
 Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -295,67 +295,67 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <ul>
-      <li>
-        Утка по-пекински
-        <ul>
-          <li>Утка</li>
-          <li>Соус</li>
-        </ul>
-      </li>
-      <li>
-        Салат Оливье
-        <ol>
-          <li>Мясо
-            <ul>
-              <li>
-                  Или колбаса
-              </li>
-            </ul>
-          </li>
-          <li>Майонез</li>
-          <li>Картофель</li>
-          <li>Что-то там ещё</li>
-        </ol>
-      </li>
-      <li>Помидоры</li>
-      <li>
-        Фрукты
-        <ol>
-          <li>Бананы</li>
-          <li>
-            Яблоки
-            <ol>
-              <li>Красные</li>
-              <li>Зелёные</li>
-            </ol>
-          </li>
-        </ol>
-      </li>
-    </ul>
-  </body>
+<body>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>
+Или колбаса
+</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>
+Фрукты
+<ol>
+<li>Бананы</li>
+<li>
+Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -376,33 +376,78 @@ fun markdownToHtml(inputName: String, outputName: String) {
     TODO()
 }
 
+
 /**
  * Средняя
  *
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+19935
+ *    111
 --------
-   19935
+19935
 + 19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
+fun digitsInInt(x: Int) = if (x == 0) {
+    1
+} else {
+    ceil(log10(x.toDouble())).toInt()
+}
+
+fun multiplicationList(x: Int, lhv: Int): List<Int> {
+    var i = x
+    val list = mutableListOf<Int>()
+    while (i != 0) {
+        list.add(i % 10 * lhv)
+        i /= 10
+    }
+    return list
+}
+
+
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+
+    val res = lhv * rhv
+    val place = digitsInInt(res) + 1
+    val list = multiplicationList(rhv, lhv)
+    File(outputName).bufferedWriter().use {
+        it.write(" ".repeat(place - digitsInInt(lhv)) + lhv)
+        it.newLine()
+        it.write("*" + " ".repeat(place - digitsInInt(rhv) - 1) + rhv)
+        it.newLine()
+        it.write("-".repeat(place))
+        it.newLine()
+
+        for (i in 0 until digitsInInt(rhv)) {
+            val count = digitsInInt(list[i])
+            if (i == 0) {
+                it.write(" ".repeat(place - count) + list[i])
+
+            } else {
+                it.write('+' + " ".repeat(place - i - count - 1) + list[i])
+            }
+            it.newLine()
+        }
+        it.write("-".repeat(place))
+        it.newLine()
+        it.write(" ".repeat(place - digitsInInt(res)) + res)
+
+        it.close()
+    }
 }
 
 
@@ -412,21 +457,94 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
+19935 | 22
+-198     906
+----
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
+fun numberToList(x: Int): List<Int> {
+    val list = x.toString().toList()
+    val res = mutableListOf<Int>()
+    for (i in list) {
+        res.add(i.toString().toInt())
+    }
+    return res
+}
+
+fun lengthOfNumber(x: Int): Int = x.toString().length
+
+fun firstDivisor(x: Int, y: Int): Int {
+    var a = 0
+    val list = numberToList(x)
+    for (i in 0 until list.size) {
+        a = a * 10 + list[i]
+        if (a / y > 0) {
+            return a
+        }
+    }
+    return a
+}
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val outt = File(outputName).bufferedWriter()
+    val x = numberToList(lhv)
+    var cur = firstDivisor(lhv, rhv)
+    var curDivisor = cur / rhv * rhv
+    var index = 0 + lengthOfNumber(cur)
+    var spaces = 0 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)
+    outt.write(" $lhv | $rhv")
+    outt.newLine()
+    outt.write(" ".repeat(spaces) + "-" + curDivisor +
+                " ".repeat(3 + lengthOfNumber(lhv) - spaces - lengthOfNumber(curDivisor)) + lhv / rhv)
+    outt.newLine()
+    outt.write(" ".repeat(spaces) + "-".repeat(lengthOfNumber(curDivisor) + 1))
+    outt.newLine()
+    spaces = 1 + lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
+    cur %= rhv
+    while (index < x.size) {
+        var trigger = false
+        if (cur == 0) {
+            trigger = true
+        }
+        cur = cur * 10 + x[index]
+        curDivisor = cur / rhv * rhv
+        if (trigger) {
+            outt.write(" ".repeat(spaces) + "0" + cur)
+            outt.newLine()
+            outt.write(" ".repeat(spaces) + "-" + curDivisor)
+            outt.newLine()
+            outt.write(" ".repeat(spaces) + "-".repeat(1 + lengthOfNumber(curDivisor)))
+            outt.newLine()
+            spaces++
+        } else {
+            outt.write(" ".repeat(spaces) + cur)
+            outt.newLine()
+            outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-" + curDivisor)
+            outt.newLine()
+            outt.write(
+                " ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(
+                    1 + lengthOfNumber(
+                        curDivisor
+                    )
+                )
+            )
+            outt.newLine()
+        }
+        spaces += lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
+        cur = cur % rhv
+        index++
+    }
+    outt.write(" ".repeat(spaces) + cur)
+    outt.close()
 }
 
