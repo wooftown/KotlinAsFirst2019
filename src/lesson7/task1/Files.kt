@@ -532,14 +532,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             outputStream.newLine()
             outputStream.write(" ".repeat(spaces - 1 + lengthOfNumber(currently) - lengthOfNumber(currentlyDivisor)) + "-" + currentlyDivisor)
             outputStream.newLine()
-            outputStream.write(
-                " ".repeat(
-                    spaces - 1 + max(
-                        lengthOfNumber(currently),
-                        lengthOfNumber(currentlyDivisor)
-                    ) - min(lengthOfNumber(currently), lengthOfNumber(currentlyDivisor))
-                ) + "-".repeat(max)
-            )
+            if (max == lengthOfNumber(currently)){
+            outputStream.write(" ".repeat(spaces) + "-".repeat(max))}else
+            {
+                outputStream.write(" ".repeat(spaces-1) + "-".repeat(max))
+            }
             outputStream.newLine()
         }
         spaces += lengthOfNumber(currently) - lengthOfNumber(currently % rhv)
