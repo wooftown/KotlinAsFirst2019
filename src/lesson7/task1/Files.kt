@@ -3,8 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import kotlin.math.ceil
-import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.min
 
@@ -406,6 +404,7 @@ fun markdownToHtml(inputName: String, outputName: String) {
  */
 
 fun lengthOfNumber(x: Int): Int = x.toString().length
+
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x
     val list = mutableListOf<Int>()
@@ -420,6 +419,7 @@ fun multiplicationList(x: Int, lhv: Int): List<Int> {
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 
     val res = lhv * rhv
+
     val place = lengthOfNumber(res) + 1
     val list = multiplicationList(rhv, lhv)
     File(outputName).bufferedWriter().use {
@@ -493,51 +493,60 @@ fun firstDivisor(x: Int, y: Int): Int {
 }
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    val outt = File(outputName).bufferedWriter()
+    val outputStream = File(outputName).bufferedWriter()
     val x = numberToList(lhv)
-    var cur = firstDivisor(lhv, rhv)
-    var curDivisor = cur / rhv * rhv
-    var index = 0 + lengthOfNumber(cur)
-    var spaces = 0 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)
-    outt.write(" $lhv | $rhv")
-    outt.newLine()
-    outt.write(" ".repeat(spaces) + "-" + curDivisor +
-                " ".repeat(3 + lengthOfNumber(lhv) - spaces - lengthOfNumber(curDivisor)) + lhv / rhv)
-    outt.newLine()
-    outt.write(" ".repeat(spaces) + "-".repeat(lengthOfNumber(curDivisor) + 1))
-    outt.newLine()
-    spaces = 1 + lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
-    cur %= rhv
+    var currently = firstDivisor(lhv, rhv)
+    var currentlyDivisor = currently / rhv * rhv
+    var index = 0 + lengthOfNumber(currently)
+    var spaces = 0 + lengthOfNumber(currently) - lengthOfNumber(currentlyDivisor)
+    outputStream.write(" $lhv | $rhv")
+    outputStream.newLine()
+    outputStream.write(
+        " ".repeat(spaces) + "-" + currentlyDivisor +
+                " ".repeat(3 + lengthOfNumber(lhv) - spaces - lengthOfNumber(currentlyDivisor)) + lhv / rhv
+    )
+    outputStream.newLine()
+    outputStream.write(" ".repeat(spaces) + "-".repeat(lengthOfNumber(currentlyDivisor) + 1))
+    outputStream.newLine()
+    spaces = 1 + lengthOfNumber(currently) - lengthOfNumber(currently % rhv)
+    currently %= rhv
     while (index < x.size) {
         var trigger = false
-        if (cur == 0) {
+        if (currently == 0) {
             trigger = true
         }
-        cur = cur * 10 + x[index]
-        curDivisor = cur / rhv * rhv
+        currently = currently * 10 + x[index]
+        currentlyDivisor = currently / rhv * rhv
         if (trigger) {
-            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur)+1)
-            outt.write(" ".repeat(spaces) + "0" + cur)
-            outt.newLine()
-            outt.write(" ".repeat(spaces) + "-" + curDivisor)
-            outt.newLine()
-            outt.write(" ".repeat(spaces) + "-".repeat(max))
-            outt.newLine()
+            val max = max(1 + lengthOfNumber(currentlyDivisor), lengthOfNumber(currently) + 1)
+            outputStream.write(" ".repeat(spaces) + "0" + currently)
+            outputStream.newLine()
+            outputStream.write(" ".repeat(spaces) + "-" + currentlyDivisor)
+            outputStream.newLine()
+            outputStream.write(" ".repeat(spaces) + "-".repeat(max))
+            outputStream.newLine()
             spaces++
         } else {
-            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur))
-            outt.write(" ".repeat(spaces) + cur)
-            outt.newLine()
-            outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-" + curDivisor)
-            outt.newLine()
-            outt.write(" ".repeat(spaces - 1 + max(lengthOfNumber(cur) , lengthOfNumber(curDivisor))-min(lengthOfNumber(cur) , lengthOfNumber(curDivisor))) + "-".repeat(max))
-            outt.newLine()
+            val max = max(1 + lengthOfNumber(currentlyDivisor), lengthOfNumber(currently))
+            outputStream.write(" ".repeat(spaces) + currently)
+            outputStream.newLine()
+            outputStream.write(" ".repeat(spaces - 1 + lengthOfNumber(currently) - lengthOfNumber(currentlyDivisor)) + "-" + currentlyDivisor)
+            outputStream.newLine()
+            outputStream.write(
+                " ".repeat(
+                    spaces - 1 + max(
+                        lengthOfNumber(currently),
+                        lengthOfNumber(currentlyDivisor)
+                    ) - min(lengthOfNumber(currently), lengthOfNumber(currentlyDivisor))
+                ) + "-".repeat(max)
+            )
+            outputStream.newLine()
         }
-        spaces += lengthOfNumber(cur) - lengthOfNumber(cur % rhv)
-        cur = cur % rhv
+        spaces += lengthOfNumber(currently) - lengthOfNumber(currently % rhv)
+        currently %= rhv
         index++
     }
-    outt.write(" ".repeat(spaces) + cur)
-    outt.close()
+    outputStream.write(" ".repeat(spaces) + currently)
+    outputStream.close()
 }
 
