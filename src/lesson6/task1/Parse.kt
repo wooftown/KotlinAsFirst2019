@@ -417,6 +417,13 @@ fun closedBracket(beginning: Int, commands: String): Int {
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    if (commands == ""){
+        val cell = mutableListOf<Int>()
+        for (i in 1..cells) {
+            cell.add(0)
+        }
+        return cell
+    }
     require(commands.matches(Regex("""[ +-<>\[\]]+""")))
     var bracket = 0
     val brackets = listOf('[', ']')
