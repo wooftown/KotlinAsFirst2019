@@ -5,6 +5,7 @@ package lesson7.task1
 import java.io.File
 import kotlin.math.ceil
 import kotlin.math.log10
+import kotlin.math.max
 
 
 /**
@@ -523,7 +524,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             outt.newLine()
             outt.write(" ".repeat(spaces) + "-" + curDivisor)
             outt.newLine()
-            outt.write(" ".repeat(spaces) + "-".repeat(1 + lengthOfNumber(curDivisor)))
+            val max = max(1 + lengthOfNumber(curDivisor),lengthOfNumber(cur))
+            outt.write(" ".repeat(spaces) + "-".repeat(max))
             outt.newLine()
             spaces++
         } else {
@@ -531,11 +533,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             outt.newLine()
             outt.write(" ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-" + curDivisor)
             outt.newLine()
+            val max = max(1 + lengthOfNumber(curDivisor), lengthOfNumber(cur))
             outt.write(
-                " ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(
-                    1 + lengthOfNumber(
-                        curDivisor
-                    )
+                " ".repeat(spaces - 1 + lengthOfNumber(cur) - lengthOfNumber(curDivisor)) + "-".repeat(max
                 )
             )
             outt.newLine()
