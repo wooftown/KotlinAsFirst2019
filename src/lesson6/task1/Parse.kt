@@ -464,7 +464,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
         commandNow++
         commandsPassed++
-        check(pos in 0 until cells)
+        check(pos in 0..cells)
     }
 
 
