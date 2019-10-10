@@ -153,14 +153,14 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  *
  * [ \s]?[+]?[0-9 -]+([(][0-9 -]+[)])?[0-9 -]+
- *
+ * если использовать .filter { it != ' ' } то работает дольше
  */
 fun flattenPhoneNumber(phone: String): String {
-    val validSet = setOf('-', '(', ')', '+')
+    val validSet = setOf('-', '(', ')', '+',' ')
     var isOpened = false
     var isFilled = false
     val res = mutableListOf<Char>()
-    for (i in phone.filter { it != ' ' }) {
+    for (i in phone) {
         if ((i !in validSet) && (!i.isDigit())) return ""
         if (i.isDigit()) {
             res.add(i)
@@ -429,8 +429,7 @@ fun closedBracket(beginning: Int, commands: String): Int {
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     require(commands.matches(Regex("""[ +-<>\[\]]+|^$""")))
     var bracket = 0
-    val brackets = listOf('[', ']')
-    for (i in commands.filter { it in brackets }) {
+    for (i in commands.filter { it in "[]" }) {
         if (i == '[') {
             bracket++
         } else {
