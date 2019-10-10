@@ -71,41 +71,41 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+
+val months = listOf(
+    "",
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+)
+
 fun dateStrToDigit(str: String): String {
-    val months = listOf(
-        "",
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    try {
-        val parts = str.split(" ")
-        if (parts.size != 3) {
-            return ""
-        }
-        val day = parts[0].toInt()
-        val year = parts[2].toInt()
-        val month = months.indexOf(parts[1])
-        if (month !in 1..12) {
-            return ""
-        }
-        if (day > daysInMonth(month, year)) {
-            return ""
-        }
-        return String.format("%02d.%02d.%d", day, month, year)
-    } catch (e: NumberFormatException) {
+    val parts = str.split(" ")
+    if (parts.size != 3) {
         return ""
     }
-
+    val day = parts[0].toIntOrNull()
+    val year = parts[2].toIntOrNull()
+    val month = months.indexOf(parts[1])
+    if (month !in 1..12) {
+        return ""
+    }
+    if ((day == null) || (year == null)) {
+        return ""
+    }
+    if (day > daysInMonth(month, year)) {
+        return ""
+    }
+    return String.format("%02d.%02d.%d", day, month, year)
 }
 
 /**
@@ -119,40 +119,23 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val months = listOf(
-        "",
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
-    try {
-        val parts = digital.split(".")
-        if (parts.size != 3) {
-            return ""
-        }
-        val day = parts[0].toInt()
-        if (parts[1].toInt() !in 1..12) {
-            return ""
-        }
-        val month = months[parts[1].toInt()]
-        val year = parts[2].toInt()
-        if (day > daysInMonth(parts[1].toInt(), year)) {
-            return ""
-        }
-        return String.format("%d %s %d", day, month, year)
-    } catch (e: NumberFormatException) {
+    val parts = digital.split(".")
+    if (parts.size != 3) {
         return ""
     }
-
+    val day = parts[0].toIntOrNull()
+    val year = parts[2].toIntOrNull()
+    if ((day == null) || (year == null)) {
+        return ""
+    }
+    if (parts[1].toInt() !in 1..12) {
+        return ""
+    }
+    val month = months[parts[1].toInt()]
+    if (day > daysInMonth(parts[1].toInt(), year)) {
+        return ""
+    }
+    return String.format("%d %s %d", day, month, year)
 }
 
 /**
@@ -172,13 +155,37 @@ fun dateDigitToStr(digital: String): String {
  * [ \s]?[+]?[0-9 -]+([(][0-9 -]+[)])?[0-9 -]+
  *
  */
-fun flattenPhoneNumber(phone: String): String =
-    if (!phone.matches(Regex("""[ \s]?[+]?[\d -]*([(][\d -]+[)])?[\d -]+"""))) {
-        ""
-    } else {
-        val list = listOf('-', '(', ')', ' ')
-        phone.filter { it !in list }
+fun flattenPhoneNumber(phone: String): String {
+    val validSet = setOf('-', '(', ')', '+')
+    var isOpened = false
+    var isFilled = false
+    val res = mutableListOf<Char>()
+    for (i in phone.filter { it != ' ' }) {
+        if ((i !in validSet) && (!i.isDigit())) return ""
+        if (i.isDigit()) {
+            res.add(i)
+            if (isOpened) {
+                isFilled = true
+            }
+        }
+        if (i == '+') {
+            if (res.size == 0) res.add(i) else return ""
+        }
+        if (i == '(') {
+            if (!isOpened) isOpened = true else return ""
+        }
+        if (i == ')') {
+            if (isOpened && isFilled) {
+                isOpened = false
+                isFilled = false
+            } else {
+                return ""
+            }
+        }
+
     }
+    return res.joinToString("")
+}
 
 
 /**
@@ -223,9 +230,10 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  * ([0-9]+[ ]*[%+ -]+)+
  * (\d+[ ]*[%+ -]+)+
+ * (\d+ [%+ -]+)+
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+[ ]*[%+ -]+)+"""))) {
+    if (!jumps.matches(Regex("""(\d+ [%+ -]+)+"""))) {
         return -1
     }
     val list = jumps.split(' ')
@@ -294,9 +302,11 @@ fun firstDuplicateIndex(str: String): Int {
  * Вернуть название самого дорогого товара в списке (в примере это Курица),
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
+ * ([^\s;]+ \d*.?\d+; )+
+ * ([^\s;]+ (\d*.?\d+; |\d*.?\d+))+
  */
 fun mostExpensive(description: String): String {
-    if (description == "") {
+    if (!description.matches(Regex("""([^\s;]+ (\d*.?\d+; |\d*.?\d+))+"""))) {
         return ""
     }
     val list = description.split("; ")
@@ -417,14 +427,7 @@ fun closedBracket(beginning: Int, commands: String): Int {
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    if (commands == ""){
-        val cell = mutableListOf<Int>()
-        for (i in 1..cells) {
-            cell.add(0)
-        }
-        return cell
-    }
-    require(commands.matches(Regex("""[ +-<>\[\]]+""")))
+    require(commands.matches(Regex("""[ +-<>\[\]]+|^$""")))
     var bracket = 0
     val brackets = listOf('[', ']')
     for (i in commands.filter { it in brackets }) {

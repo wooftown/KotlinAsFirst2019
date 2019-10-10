@@ -3,8 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import kotlin.math.max
-import kotlin.math.min
 
 
 /**
@@ -73,7 +71,18 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val map = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
+    var prevChar = 'x'
+    File(outputName).bufferedWriter().use {
+        for (i in File(inputName).readText()) {
+            if ((i in map.keys) && (prevChar in "ЖжЧчШшЩщ")) {
+                it.write(map[i].toString())
+            } else {
+                it.write(i.toString())
+            }
+            prevChar = i
+        }
+    }
 }
 
 /**
@@ -94,7 +103,22 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val lines = mutableListOf<String>()
+    for (i in (File(inputName).readLines())) {
+        lines.add(i.trim())
+    }
+    var max = 0
+    for (line in lines) {
+        if (line.length > max) {
+            max = line.length
+        }
+    }
+    File(outputName).bufferedWriter().use {
+        for (line in lines) {
+            it.write(" ".repeat((max - line.length) / 2) + line)
+            it.newLine()
+        }
+    }
 }
 
 /**
@@ -146,7 +170,15 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val lowText = File(inputName).readText().toLowerCase()
+    val list = lowText.split(Regex("""[^a-zа-яё]+""")).filter { it.isNotEmpty() }.toList()
+    for (i in list.toSet()) {
+        map[i] = list.count { it == i }
+    }
+    return map.toList().sortedByDescending { it.second }.take(20).toMap()
+}
 
 /**
  * Средняя
@@ -183,7 +215,24 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val lowMap = mutableMapOf<Char, String>()
+    for ((i, j) in dictionary) {
+        lowMap[i.toLowerCase()] = j.toLowerCase()
+    }
+    File(outputName).bufferedWriter().use {
+        for (char in File(inputName).readText()) {
+            val curChar = char.toLowerCase()
+            if (curChar in lowMap.keys) {
+                if (char.isLowerCase()) {
+                    it.write(lowMap[curChar]!!)
+                } else {
+                    it.write(lowMap[curChar]!!.first().toUpperCase() + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length))
+                }
+            } else {
+                it.write(char.toString())
+            }
+        }
+    }
 }
 
 /**
@@ -209,8 +258,31 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
+/*
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val list = mutableListOf<String>()
+    var max = 0
+    for (line in File(inputName).readLines()) {
+        if (line.toLowerCase().toSet().size == line.length) {
+            if (line.length == max) {
+                list.add(line)
+            }
+            if (line.length > max) {
+                max = line.length
+                list.clear()
+                list.add(line)
+            }
+        }
+    }
+    outputStream.write(list.joinToString(", "))
+    outputStream.close()
+}
+*/
+fun chooseLongestChaoticWord(inputName: String, outputName: String) {
+    val text = File(inputName).readLines().filter { it.toLowerCase().toSet().size == it.length }
+    val max = text.map { it.length }.max() ?: -1
+    File(outputName).writeText(text.filter { it.length == max }.joinToString(", "))
 }
 
 /**
@@ -492,4 +564,6 @@ fun firstDivisor(x: Int, y: Int): Int {
     return a
 }
 
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {TODO()}
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+    TODO()
+}
