@@ -156,7 +156,7 @@ fun dateDigitToStr(digital: String): String {
  * если использовать .filter { it != ' ' } то работает дольше
  */
 fun flattenPhoneNumber(phone: String): String {
-    val validSet = setOf('-', '(', ')', '+',' ')
+    val validSet = setOf('-', '(', ')', '+', ' ')
     var isOpened = false
     var isFilled = false
     val res = mutableListOf<Char>()
@@ -435,12 +435,10 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         } else {
             bracket--
         }
+        require(bracket >= 0)
     }
     require(bracket == 0)
-    val cell = mutableListOf<Int>()
-    for (i in 1..cells) {
-        cell.add(0)
-    }
+    val cell = MutableList(cells) { 0 }
     var pos = cells / 2
     var commandsPassed = 0
     var commandNow = 0

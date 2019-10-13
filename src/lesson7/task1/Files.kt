@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 
 /**
@@ -475,7 +476,7 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 
-fun lengthOfNumber(x: Int): Int = x.toString().length
+fun lon(x: Int): Int = x.toString().length
 
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x
@@ -492,18 +493,18 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 
     val res = lhv * rhv
 
-    val place = lengthOfNumber(res) + 1
+    val place = lon(res) + 1
     val list = multiplicationList(rhv, lhv)
     File(outputName).bufferedWriter().use {
-        it.write(" ".repeat(place - lengthOfNumber(lhv)) + lhv)
+        it.write(" ".repeat(place - lon(lhv)) + lhv)
         it.newLine()
-        it.write("*" + " ".repeat(place - lengthOfNumber(rhv) - 1) + rhv)
+        it.write("*" + " ".repeat(place - lon(rhv) - 1) + rhv)
         it.newLine()
         it.write("-".repeat(place))
         it.newLine()
 
-        for (i in 0 until lengthOfNumber(rhv)) {
-            val count = lengthOfNumber(list[i])
+        for (i in 0 until lon(rhv)) {
+            val count = lon(list[i])
             if (i == 0) {
                 it.write(" ".repeat(place - count) + list[i])
 
@@ -514,7 +515,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         it.write("-".repeat(place))
         it.newLine()
-        it.write(" ".repeat(place - lengthOfNumber(res)) + res)
+        it.write(" ".repeat(place - lon(res)) + res)
 
         it.close()
     }
@@ -541,7 +542,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-
+// fun lengthOfNumber(x: Int): Int = x.toString().length
 fun numberToList(x: Int): List<Int> {
     val list = x.toString().toList()
     val res = mutableListOf<Int>()
@@ -550,7 +551,6 @@ fun numberToList(x: Int): List<Int> {
     }
     return res
 }
-
 
 fun firstDivisor(x: Int, y: Int): Int {
     var a = 0
@@ -564,6 +564,54 @@ fun firstDivisor(x: Int, y: Int): Int {
     return a
 }
 
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
+    val first = firstDivisor(x, y)
+    val list = mutableListOf<Pair<Int, Int>>()
+    val numberlist = numberToList(x)
+    var i = lon(first)
+    list.add(first to (first - first % y))
+    var a = list.last().first - list.last().second
+    while (i != lon(x)) {
+        a = a * 10 + numberlist[i]
+        list.add(a to (a - a % y))
+        a %= y
+        i++
+    }
+    return list
 }
+//грязный код , пока что не доделал...
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+    val outputStream = File(outputName).bufferedWriter()
+    val list = divisionList(lhv, rhv)
+    var spaces = if (lon(list[0].first) == lon(list[0].second)) 1 else 0
+    var maxL = max(lon(list[0].first), lon(list[0].second) + 1)
+    var res = list[0].first - list[0].second
+    outputStream.write(" ".repeat(spaces) + "$lhv | $rhv\n")
+    outputStream.write(
+        " ".repeat(maxL - lon(list[0].second) - 1) + "-" + list[0].second + " ".repeat(lon(lhv) + 3+ spaces -maxL) + lhv / rhv
+    )
+    outputStream.newLine()
+    outputStream.write("-".repeat(maxL))
+    outputStream.newLine()
+    spaces = maxL
+    for (i in 1 until list.size) {
+        spaces++
+        if (res == 0) {
+            maxL = max(lon(list[i].first) + 1, lon(list[i].second) + 1)
+            outputStream.write(" ".repeat(spaces - lon(list[i].first) - 1) + "0" + list[i].first)
+            outputStream.newLine()
+        } else {
+            maxL = max(lon(list[i].first), lon(list[i].second) + 1)
+            outputStream.write(" ".repeat(spaces - lon(list[i].first)) + list[i].first)
+            outputStream.newLine()
+        }
+
+        outputStream.write(" ".repeat(spaces - lon(list[i].second) - 1) + "-" + list[i].second)
+        outputStream.newLine()
+        outputStream.write(" ".repeat(spaces - maxL) + "-".repeat(maxL))
+        outputStream.newLine()
+    }
+    outputStream.write(" ".repeat(spaces - lon(lhv % rhv)) + lhv % rhv)
+    outputStream.close()
+}
+
