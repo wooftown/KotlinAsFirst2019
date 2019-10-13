@@ -194,10 +194,10 @@ Basic, Ruby, Swift.
 
         transliterate(
             "input/testt.txt",
-            mapOf('>' to "а"),
+            mapOf('l' to "Z=lNEdN"),
             "temp.txt"
         )
-        assertFileContent("temp.txt", "а")
+        assertFileContent("temp.txt", "Z=lnedn")
         File("temp.txt").delete()
 
 

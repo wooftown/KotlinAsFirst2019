@@ -228,8 +228,8 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                     it.write(lowMap[curChar] ?: "")
                 } else {
                     it.write(
-                        lowMap[curChar] ?: "".first().toUpperCase()
-                        + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length)
+                        (lowMap[curChar] ?: "").first().toUpperCase()
+                                + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length)
                     )
                 }
             } else {
