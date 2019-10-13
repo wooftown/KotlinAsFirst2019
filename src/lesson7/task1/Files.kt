@@ -610,6 +610,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         outputStream.newLine()
         outputStream.write(" ".repeat(spaces - maxL) + "-".repeat(maxL))
         outputStream.newLine()
+        res = list[i].first - list[i].second
     }
     outputStream.write(" ".repeat(spaces - lon(lhv % rhv)) + lhv % rhv)
     outputStream.close()
