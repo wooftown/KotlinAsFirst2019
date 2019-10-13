@@ -583,12 +583,14 @@ fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
     val list = divisionList(lhv, rhv)
-    var spaces = if (lon(list[0].first) == lon(list[0].second)) 1 else 0
-    var maxL = max(lon(list[0].first), lon(list[0].second) + 1)
-    var res = list[0].first - list[0].second
+    var x = list[0].first
+    var y = list[0].second
+    var spaces = if (lon(x) == lon(y)) 1 else 0
+    var maxL = max(lon(x), lon(y) + 1)
+    var res = x - y
     outputStream.write(" ".repeat(spaces) + "$lhv | $rhv\n")
     outputStream.write(
-        " ".repeat(maxL - lon(list[0].second) - 1) + "-" + list[0].second + " ".repeat(lon(lhv) + 3+ spaces -maxL) + lhv / rhv
+        " ".repeat(maxL - lon(y) - 1) + "-" + y + " ".repeat(lon(lhv) + 3+ spaces -maxL) + lhv / rhv
     )
     outputStream.newLine()
     outputStream.write("-".repeat(maxL))
@@ -596,21 +598,23 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     spaces = maxL
     for (i in 1 until list.size) {
         spaces++
+        x = list[i].first
+        y = list[i].second
         if (res == 0) {
-            maxL = max(lon(list[i].first) + 1, lon(list[i].second) + 1)
-            outputStream.write(" ".repeat(spaces - lon(list[i].first) - 1) + "0" + list[i].first)
+            maxL = max(lon(x) + 1, lon(y) + 1)
+            outputStream.write(" ".repeat(spaces - lon(x) - 1) + "0" + x)
             outputStream.newLine()
         } else {
-            maxL = max(lon(list[i].first), lon(list[i].second) + 1)
-            outputStream.write(" ".repeat(spaces - lon(list[i].first)) + list[i].first)
+            maxL = max(lon(x), lon(y) + 1)
+            outputStream.write(" ".repeat(spaces - lon(x)) + x)
             outputStream.newLine()
         }
 
-        outputStream.write(" ".repeat(spaces - lon(list[i].second) - 1) + "-" + list[i].second)
+        outputStream.write(" ".repeat(spaces - lon(y) - 1) + "-" + y)
         outputStream.newLine()
         outputStream.write(" ".repeat(spaces - maxL) + "-".repeat(maxL))
         outputStream.newLine()
-        res = list[i].first - list[i].second
+        res = x - y
     }
     outputStream.write(" ".repeat(spaces - lon(lhv % rhv)) + lhv % rhv)
     outputStream.close()
