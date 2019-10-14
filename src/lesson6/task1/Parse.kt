@@ -151,12 +151,14 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку.
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
- *
- * [ \s]?[+]?[0-9 -]+([(][0-9 -]+[)])?[0-9 -]+
  * если использовать .filter { it != ' ' } то работает дольше
+ * Submission #17783
  */
 fun flattenPhoneNumber(phone: String): String {
     val validSet = setOf('-', '(', ')', '+', ' ')
+    if ((phone.toSet() - validSet).isEmpty()) {
+        return ""
+    }
     var isOpened = false
     var isFilled = false
     val res = mutableListOf<Char>()
