@@ -224,16 +224,15 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         for (char in File(inputName).readText()) {
             val curChar = char.toLowerCase()
             if (curChar in lowMap.keys) {
-                if (lowMap[curChar]!!.isEmpty()){
-                    continue
-                }
-                if (char.isLowerCase()){
-                    it.write (lowMap[curChar]!!)
-                } else {
-                    it.write(
-                        lowMap[curChar]!!.first().toUpperCase()
-                                + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length)
-                    )
+                if (!lowMap[curChar]!!.isEmpty()) {
+                    if (char.isUpperCase()) {
+                        it.write(
+                            lowMap[curChar]!!.first().toUpperCase()
+                                    + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length)
+                        )
+                    } else {
+                        it.write(lowMap[curChar]!!)
+                    }
                 }
             } else {
                 it.write(char.toString())

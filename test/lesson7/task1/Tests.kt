@@ -194,10 +194,10 @@ Basic, Ruby, Swift.
 
         transliterate(
             "input/testt.txt",
-            mapOf('l' to ""),
+            mapOf('$' to "loML=2&2/g"),
             "temp.txt"
         )
-        assertFileContent("temp.txt", "")
+        assertFileContent("temp.txt", "loml=2&2/g")
         File("temp.txt").delete()
 
 
