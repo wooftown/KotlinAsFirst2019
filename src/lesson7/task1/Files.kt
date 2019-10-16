@@ -58,16 +58,13 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val text = File(inputName).readText().toLowerCase()
     val res = mutableMapOf<String, Int>()
-    /* for (i in substrings) {
-        res[i] = 0
-    }*/
-    for (i in substrings) {
-        val iLow = i.toLowerCase()
-        var index = text.indexOf(iLow, 0)
-        res[i] = 0
+    for (key in substrings) {
+        val lowKey = key.toLowerCase()
+        var index = text.indexOf(lowKey, 0)
+        res[key] = 0
         while (index != -1) {
-            index = text.indexOf(iLow, index + 1)
-            res[i] = res[i]!! + 1
+            index = text.indexOf(lowKey, index + 1)
+            res[key] = res[key]!! + 1
         }
     }
     return res
@@ -120,11 +117,8 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val lines = mutableListOf<String>()
+    val lines = File(inputName).readLines().map { it.trim() }
     var max = 0
-    for (i in (File(inputName).readLines())) {
-        lines.add(i.trim())
-    }
     for (line in lines) {
         if (line.length > max) {
             max = line.length
@@ -240,7 +234,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         for (char in File(inputName).readText()) {
             val curChar = char.toLowerCase()
             if (curChar in lowMap.keys) {
-                if (!lowMap[curChar]!!.isEmpty()) {
+                if (lowMap[curChar]!!.isNotEmpty()) {
                     if (char.isUpperCase()) {
                         it.write(
                             lowMap[curChar]!!.first().toUpperCase()
