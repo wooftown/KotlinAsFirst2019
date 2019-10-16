@@ -118,12 +118,7 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val lines = File(inputName).readLines().map { it.trim() }
-    var max = 0
-    for (line in lines) {
-        if (line.length > max) {
-            max = line.length
-        }
-    }
+    val max = lines.map { it.length }.max() ?: 0
     File(outputName).bufferedWriter().use {
         for (line in lines) {
             it.write(" ".repeat((max - line.length) / 2) + line)
@@ -227,9 +222,7 @@ fun top20Words(inputName: String): Map<String, Int> {
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
     val lowMap = mutableMapOf<Char, String>()
-    for ((i, j) in dictionary) {
-        lowMap[i.toLowerCase()] = j.toLowerCase()
-    }
+    dictionary.forEach { (k, v) -> lowMap[k.toLowerCase()] = v.toLowerCase() }
     File(outputName).bufferedWriter().use {
         for (char in File(inputName).readText()) {
             val curChar = char.toLowerCase()
@@ -274,27 +267,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *как же болят глаза...
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
-/*
-fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    val outputStream = File(outputName).bufferedWriter()
-    val list = mutableListOf<String>()
-    var max = 0
-    for (line in File(inputName).readLines()) {
-        if (line.toLowerCase().toSet().size == line.length) {
-            if (line.length == max) {
-                list.add(line)
-            }
-            if (line.length > max) {
-                max = line.length
-                list.clear()
-                list.add(line)
-            }
-        }
-    }
-    outputStream.write(list.joinToString(", "))
-    outputStream.close()
-}
-*/
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val text = File(inputName).readLines().filter { it.toLowerCase().toSet().size == it.length }
     val max = text.map { it.length }.max() ?: -1
