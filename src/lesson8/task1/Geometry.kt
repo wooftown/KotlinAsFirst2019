@@ -28,6 +28,7 @@ class Triangle private constructor(private val points: Set<Point>) {
     constructor(a: Point, b: Point, c: Point) : this(linkedSetOf(a, b, c))
 
     fun halfPerimeter() = (a.distance(b) + b.distance(c) + c.distance(a)) / 2.0
+    fun perimeter() = (a.distance(b) + b.distance(c) + c.distance(a))
 
     fun area(): Double {
         val p = halfPerimeter()
@@ -78,8 +79,6 @@ data class Segment(val begin: Point, val end: Point) {
 }
 
 /**
- * Средняя
- *
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
@@ -100,8 +99,6 @@ fun diameter(vararg points: Point): Segment {
 }
 
 /**
- * Простая
- *
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
@@ -122,13 +119,13 @@ class Line private constructor(val b: Double, val angle: Double) {
     constructor(point: Point, angle: Double) : this(point.y * cos(angle) - point.x * sin(angle), angle)
 
     /**
-     * Средняя
-     *
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        TODO()
+        val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
+        val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
+        return Point(x, y)
     }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
@@ -143,19 +140,16 @@ class Line private constructor(val b: Double, val angle: Double) {
 }
 
 /**
- * Средняя
- *
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 
 /**
- * Средняя
- *
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    val tg = (a.y - b.y) / (a.x - b.x) // правильно ли оставлять переменную бесконечностью , или лучше сделать проверку на деление на 0.0?
+    val tg =
+        (a.y - b.y) / (a.x - b.x) // правильно ли оставлять переменную бесконечностью , или лучше сделать проверку и сразу выдать что угол 90?
     return if (tg >= 0) {
         Line(a, atan(tg) % PI)
     } else {
@@ -165,8 +159,6 @@ fun lineByPoints(a: Point, b: Point): Line {
 }
 
 /**
- * Сложная
- *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
@@ -175,8 +167,6 @@ fun bisectorByPoints(a: Point, b: Point): Line {
 }
 
 /**
- * Средняя
- *
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
@@ -201,19 +191,21 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
 }
 
 /**
- * Сложная
- *
  * Дано три различные точки. Построить окружность, проходящую через них
  * (все три точки должны лежать НА, а не ВНУТРИ, окружности).
  * Описание алгоритмов см. в Интернете
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
+ *
+ * Центр описанной окружности лежит на пересечении серединных перпендикуляров к сторонам треугольника
+ * r = abc/4s
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    TODO()
+   // val rad = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+}
 
 /**
- * Очень сложная
- *
  * Дано множество точек на плоскости. Найти круг минимального радиуса,
  * содержащий все эти точки. Если множество пустое, бросить IllegalArgumentException.
  * Если множество содержит одну точку, вернуть круг нулевого радиуса с центром в данной точке.
@@ -221,6 +213,12 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
  * Примечание: в зависимости от ситуации, такая окружность может либо проходить через какие-либо
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
+ * меньший угол
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+
+
+fun minContainingCircle(vararg points: Point): Circle {
+    TODO()
+}
+
 
