@@ -3,20 +3,10 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
-/**
- * Точка на плоскости
- */
 data class Point(val x: Double, val y: Double) {
-    /**
-     * Пример
-     *
-     * Рассчитать (по известной формуле) расстояние между двумя точками
-     */
+
     fun distance(other: Point): Double = sqrt(sqr(x - other.x) + sqr(y - other.y))
 }
 
@@ -37,22 +27,13 @@ class Triangle private constructor(private val points: Set<Point>) {
 
     constructor(a: Point, b: Point, c: Point) : this(linkedSetOf(a, b, c))
 
-    /**
-     * Пример: полупериметр
-     */
     fun halfPerimeter() = (a.distance(b) + b.distance(c) + c.distance(a)) / 2.0
 
-    /**
-     * Пример: площадь
-     */
     fun area(): Double {
         val p = halfPerimeter()
         return sqrt(p * (p - a.distance(b)) * (p - b.distance(c)) * (p - c.distance(a)))
     }
 
-    /**
-     * Пример: треугольник содержит точку
-     */
     fun contains(p: Point): Boolean {
         val abp = Triangle(a, b, p)
         val bcp = Triangle(b, c, p)
@@ -67,13 +48,9 @@ class Triangle private constructor(private val points: Set<Point>) {
     override fun toString() = "Triangle(a = $a, b = $b, c = $c)"
 }
 
-/**
- * Окружность с заданным центром и радиусом
- */
+
 data class Circle(val center: Point, val radius: Double) {
     /**
-     * Простая
-     *
      * Рассчитать расстояние между двумя окружностями.
      * Расстояние между непересекающимися окружностями рассчитывается как
      * расстояние между их центрами минус сумма их радиусов.
@@ -82,8 +59,6 @@ data class Circle(val center: Point, val radius: Double) {
     fun distance(other: Circle): Double = maxOf(center.distance(other.center) - radius - other.radius, 0.0)
 
     /**
-     * Тривиальная
-     *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
     fun contains(p: Point): Boolean = center.distance(p) - radius <= 0.0
@@ -98,6 +73,8 @@ data class Segment(val begin: Point, val end: Point) {
 
     override fun hashCode() =
         begin.hashCode() + end.hashCode()
+
+    fun midPoint(): Point = Point(((begin.x + end.x) / 2), ((begin.y + end.y) / 2))
 }
 
 /**
@@ -106,7 +83,23 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment {
+    val pts = points.toSet().toList()
+    val pts2 = pts.toMutableList()
+    require(pts.size > 1)
+    var max = pts[0] to pts[0]
+    var max1 = pts[0]
+    var max2 = pts[0]
+    for (i in pts) {
+        pts2.remove(i)
+        for (j in pts2) {
+            if (i.distance(j) > max.first.distance(max.second)) {
+                max = i to j
+            }
+        }
+    }
+    return Segment(max.first, max.second)
+}
 
 /**
  * Простая
@@ -114,7 +107,8 @@ fun diameter(vararg points: Point): Segment = TODO()
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle = TODO()
+fun circleByDiameter(diameter: Segment): Circle =
+    Circle(diameter.midPoint(), diameter.midPoint().distance(diameter.begin))
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
@@ -135,7 +129,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        TODO()
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -153,14 +149,18 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line = lineByPoints(s.begin,s.end)
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line {
+    if (a.x == b.x) return Line(a, Math.PI / 2) // чтобы не делить на ноль ниже
+    val tg = (a.y - b.y) / (a.x - b.x)
+    return Line(a, atan(tg))
+}
 
 /**
  * Сложная
