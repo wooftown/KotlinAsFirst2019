@@ -155,8 +155,7 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    if (a.x == b.x) return Line(a, PI / 2)
-    val tg = (a.y - b.y) / (a.x - b.x)
+    val tg = (a.y - b.y) / (a.x - b.x) // правильно ли оставлять переменную бесконечностью , или лучше сделать проверку на деление на 0.0?
     return if (tg >= 0) {
         Line(a, atan(tg) % PI)
     } else {
