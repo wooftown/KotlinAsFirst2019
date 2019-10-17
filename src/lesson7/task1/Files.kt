@@ -463,7 +463,7 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 
-fun numberLenght(x: Int): Int = x.toString().length
+fun numberLength(x: Int): Int = x.toString().length
 
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x
@@ -475,23 +475,20 @@ fun multiplicationList(x: Int, lhv: Int): List<Int> {
     return list
 }
 
-
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-
     val res = lhv * rhv
-
-    val place = numberLenght(res) + 1
+    val place = numberLength(res) + 1
     val list = multiplicationList(rhv, lhv)
     File(outputName).bufferedWriter().use {
-        it.write(" ".repeat(place - numberLenght(lhv)) + lhv)
+        it.write(" ".repeat(place - numberLength(lhv)) + lhv)
         it.newLine()
-        it.write("*" + " ".repeat(place - numberLenght(rhv) - 1) + rhv)
+        it.write("*" + " ".repeat(place - numberLength(rhv) - 1) + rhv)
         it.newLine()
         it.write("-".repeat(place))
         it.newLine()
 
-        for (i in 0 until numberLenght(rhv)) {
-            val count = numberLenght(list[i])
+        for (i in 0 until numberLength(rhv)) {
+            val count = numberLength(list[i])
             if (i == 0) {
                 it.write(" ".repeat(place - count) + list[i])
 
@@ -502,7 +499,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         it.write("-".repeat(place))
         it.newLine()
-        it.write(" ".repeat(place - numberLenght(res)) + res)
+        it.write(" ".repeat(place - numberLength(res)) + res)
 
         it.close()
     }
@@ -529,7 +526,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-// fun lengthOfNumber(x: Int): Int = x.toString().length
 fun numberToList(x: Int): List<Int> {
     val list = x.toString().toList()
     val res = mutableListOf<Int>()
@@ -554,12 +550,12 @@ fun firstDivisor(x: Int, y: Int): Int {
 fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
     val first = firstDivisor(x, y)
     val list = mutableListOf<Pair<Int, Int>>()
-    val numberlist = numberToList(x)
-    var i = numberLenght(first)
+    val numberList = numberToList(x)
+    var i = numberLength(first)
     list.add(first to (first - first % y))
     var a = list.last().first - list.last().second
-    while (i != numberLenght(x)) {
-        a = a * 10 + numberlist[i]
+    while (i != numberLength(x)) {
+        a = a * 10 + numberList[i]
         list.add(a to (a - a % y))
         a %= y
         i++
@@ -567,18 +563,17 @@ fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
     return list
 }
 
-//грязный код , пока что не доделал...
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val list = divisionList(lhv, rhv)
     var x = list[0].first
     var y = list[0].second
-    var spaces = if (numberLenght(x) == numberLenght(y)) 1 else 0
-    var maxLenght = max(numberLenght(x), numberLenght(y) + 1)
+    var spaces = if (numberLength(x) == numberLength(y)) 1 else 0
+    var maxLenght = max(numberLength(x), numberLength(y) + 1)
     var res = x - y
     File(outputName).bufferedWriter().use {
         it.write(" ".repeat(spaces) + "$lhv | $rhv\n")
         it.write(
-            " ".repeat(maxLenght - numberLenght(y) - 1) + "-" + y + " ".repeat(numberLenght(lhv) + 3 + spaces - maxLenght) + lhv / rhv
+            " ".repeat(maxLenght - numberLength(y) - 1) + "-" + y + " ".repeat(numberLength(lhv) + 3 + spaces - maxLenght) + lhv / rhv
         )
         it.newLine()
         it.write("-".repeat(maxLenght))
@@ -588,20 +583,20 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             spaces++
             x = list[i].first
             y = list[i].second
-            maxLenght = max(numberLenght(x), numberLenght(y) + 1)
+            maxLenght = max(numberLength(x), numberLength(y) + 1)
             if (res == 0) {
-                it.write(" ".repeat(spaces - numberLenght(x) - 1) + "0" + x)
+                it.write(" ".repeat(spaces - numberLength(x) - 1) + "0" + x)
             } else {
-                it.write(" ".repeat(spaces - numberLenght(x)) + x)
+                it.write(" ".repeat(spaces - numberLength(x)) + x)
             }
             it.newLine()
-            it.write(" ".repeat(spaces - numberLenght(y) - 1) + "-" + y)
+            it.write(" ".repeat(spaces - numberLength(y) - 1) + "-" + y)
             it.newLine()
             it.write(" ".repeat(spaces - maxLenght) + "-".repeat(maxLenght))
             it.newLine()
             res = x - y
         }
-        it.write(" ".repeat(spaces - numberLenght(lhv % rhv)) + lhv % rhv)
+        it.write(" ".repeat(spaces - numberLength(lhv % rhv)) + lhv % rhv)
         it.close()
     }
 }
