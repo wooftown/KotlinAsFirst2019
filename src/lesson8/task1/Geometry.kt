@@ -88,8 +88,6 @@ fun diameter(vararg points: Point): Segment {
     val pts2 = pts.toMutableList()
     require(pts.size > 1)
     var max = pts[0] to pts[0]
-    var max1 = pts[0]
-    var max2 = pts[0]
     for (i in pts) {
         pts2.remove(i)
         for (j in pts2) {
@@ -149,7 +147,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = lineByPoints(s.begin,s.end)
+fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 
 /**
  * Средняя
@@ -157,9 +155,13 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin,s.end)
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    if (a.x == b.x) return Line(a, Math.PI / 2) // чтобы не делить на ноль ниже
     val tg = (a.y - b.y) / (a.x - b.x)
-    return Line(a, atan(tg))
+    return if (tg >= 0) {
+        Line(a, atan(tg) % PI)
+    } else {
+        Line(a, (PI - atan(-tg)) % PI)
+    }
+
 }
 
 /**
@@ -167,7 +169,10 @@ fun lineByPoints(a: Point, b: Point): Line {
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val line = lineByPoints(a, b)
+    return Line(Segment(a, b).midPoint(), (line.angle + PI / 2) % PI)
+}
 
 /**
  * Средняя
@@ -175,7 +180,25 @@ fun bisectorByPoints(a: Point, b: Point): Line = TODO()
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    val list = circles.toSet().toList()
+    val list2 = list.toMutableList()
+    require(list.size > 1)
+    var min = list[0].distance(list[1])
+    var res = list[0] to list[1]
+    for (i in list) {
+        list2.remove(i)
+        for (j in list2) {
+            val dist = i.distance(j)
+            if (dist < min) {
+                min = dist
+                res = i to j
+            }
+            if (min == 0.0) return res
+        }
+    }
+    return res
+}
 
 /**
  * Сложная
