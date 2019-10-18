@@ -155,7 +155,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
-        TODO()
+    TODO()
 }
 
 /**
