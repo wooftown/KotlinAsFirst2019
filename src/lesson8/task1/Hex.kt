@@ -42,7 +42,7 @@ data class HexPoint(val x: Int, val y: Int) {
     fun distance(other: HexPoint): Int {
         val dx = x - other.x
         val dy = y - other.y
-        return abs(dx) + abs(dy) + abs(dx + dy) / 2
+        return (abs(dx) + abs(dy) + abs(dx + dy)) / 2
     }
 
     override fun toString(): String = "$y.$x"
