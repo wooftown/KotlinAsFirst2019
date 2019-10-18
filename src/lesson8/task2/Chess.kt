@@ -22,8 +22,13 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = TODO()
+    fun notation(): String = if (Square(column, row).inside()) {
+        ('a'.toInt() - 1 + column).toChar().toString() + row.toString()
+    } else {
+        ""
+    }
 }
+
 
 /**
  * Простая
@@ -32,7 +37,10 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square {
+    require(notation.matches(Regex("""[a-h][1-8]""")))
+    return Square((notation.first() - 'a') + 1, notation.last().toString().toInt())
+}
 
 /**
  * Простая
@@ -181,7 +189,34 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2, -1 to -2, -2 to 1, -2 to -1)
+// волновой алгоритм
+fun waveKnight(start: Square, end: Square): List<Square> {
+    val map = mutableMapOf<Square, List<Square>>()
+    map[start] = listOf()
+    var index = 0
+    while (map[end] == null) {
+        for ((i, j) in map.filter { (_, j) -> j.size == index }) {
+            val hop = j + i
+            val x = i.column
+            val y = i.row
+            for ((dx, dy) in directionOfKnight) {
+                if (Square(dx + x, dy + y).inside())
+                    map[Square(dx + x, dy + y)] = hop
+                if (map[end] != null) return map[end]!!
+            }
+        }
+        index++
+    }
+    return map[end]!!
+}
+
+
+fun knightMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    if (start == end) return 0
+    return waveKnight(start, end).size
+}
 
 /**
  * Очень сложная
@@ -203,4 +238,7 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
+    return waveKnight(start,end)+end
+}
