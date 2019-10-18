@@ -84,14 +84,12 @@ data class Segment(val begin: Point, val end: Point) {
  */
 fun diameter(vararg points: Point): Segment {
     val pts = points.toSet().toList()
-    val pts2 = pts.toMutableList()
     require(pts.size > 1)
     var max = pts[0] to pts[0]
-    for (i in pts) {
-        pts2.remove(i)
-        for (j in pts2) {
-            if (i.distance(j) > max.first.distance(max.second)) {
-                max = i to j
+    for (i in pts.indices) {
+        for (j in i+1 until pts.size) {
+            if (pts[i].distance(pts[j]) > max.first.distance(max.second)) {
+                max = pts[i] to pts[j]
             }
         }
     }
@@ -149,7 +147,7 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  */
 fun lineByPoints(a: Point, b: Point): Line {
     val tg =
-        (a.y - b.y) / (a.x - b.x) // правильно ли оставлять переменную бесконечностью , или лучше сделать проверку и сразу выдать что угол 90?
+        (a.y - b.y) / (a.x - b.x)
     return if (tg >= 0) {
         Line(a, atan(tg) % PI)
     } else {
@@ -172,17 +170,15 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  */
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
     val list = circles.toSet().toList()
-    val list2 = list.toMutableList()
     require(list.size > 1)
-    var min = list[0].distance(list[1])
-    var res = list[0] to list[1]
-    for (i in list) {
-        list2.remove(i)
-        for (j in list2) {
-            val dist = i.distance(j)
+    var min = Double.POSITIVE_INFINITY
+    var res = list[0] to list[0]
+    for (i in list.indices) {
+        for (j in i + 1 until list.size) {
+            val dist = list[i].distance(list[j])
             if (dist < min) {
                 min = dist
-                res = i to j
+                res = list[i] to list[j]
             }
             if (min == 0.0) return res
         }
@@ -224,8 +220,12 @@ fun minContainingCircle(vararg points: Point): Circle {
     val a = x.begin
     val b = x.end
     val res = circleByDiameter(x)
-    val c = points.filter { it != a && it != b }.maxBy { Circle(it, 0.0).distance(res) }
-    return circleByThreePoints(a, b, c ?: a)
+    val c =
+        points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(a.distance(b)) }
+    return if ((c != null) && (sqr(c.distance(a)) + sqr(c.distance(b)) - sqr(a.distance(b)) > 0.0)) {
+        circleByThreePoints(a, b, c)
+    } else
+        res
 }
 
 
