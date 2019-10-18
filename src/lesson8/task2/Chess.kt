@@ -2,9 +2,9 @@
 
 package lesson8.task2
 
-import lesson6.task1.firstDuplicateIndex
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -100,7 +100,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
     if (start.column != end.column) {
         list.add(Square(end.column, start.row))
     }
-    if (start.row != end.row){
+    if (start.row != end.row) {
         list.add(end)
     }
     return list
@@ -129,7 +129,12 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    if (start == end) return 0
+    if ((start.column + start.row) % 2 != (end.column + end.row) % 2) return -1
+    return if (abs(start.column - start.row) == abs(end.column - end.row)) 1 else 2
+}
 
 /**
  * Сложная
@@ -149,7 +154,24 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    if (bishopMoveNumber(start, end) == -1) return listOf()
+    val list = mutableListOf(start)
+    if (start == end) return list
+    if (start.column - start.row != end.column - end.row) {
+        val square1 = Square(
+            (end.row + end.column - start.row + start.column) / 2,
+            (end.row + end.column + start.row - start.column) / 2
+        )
+        val square2 = Square(
+            (start.row + start.column - end.row + end.column) / 2,
+            (start.row + start.column + end.row - end.column) / 2
+        )
+        if (square1.inside()) list.add(square1) else list.add(square2)
+    }
+    list.add(end)
+    return list
+}
 
 /**
  * Средняя
@@ -191,10 +213,44 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-private val directionsKing = listOf(1 to 1, 1 to -1, -1 to -1, -1 to 1)
 
 fun kingTrajectory(start: Square, end: Square): List<Square> {
-    TODO()
+    require(start.inside() && end.inside())
+    val list = mutableListOf(start)
+    if (end == start) return list
+    var dxToDy = 0 to 0
+    var currentColumn = list.last().column
+    var currentRow = list.last().row
+    if (end.column > start.column) {
+        dxToDy = if (end.row > start.row) {
+            1 to 1
+        } else {
+            1 to -1
+        }
+    }
+    if (start.column > end.column) {
+        dxToDy = if (end.row > start.row) {
+            -1 to 1
+        } else {
+            -1 to -1
+        }
+    }
+    if (dxToDy != 0 to 0) {
+        for (i in 1..min(abs(end.column - start.column), abs(end.row - start.row))) {
+            currentColumn += dxToDy.first
+            currentRow += dxToDy.second
+            list.add(Square(currentColumn, currentRow))
+        }
+    }
+    while (currentColumn != end.column) {
+        currentColumn++
+        list.add(Square(currentColumn, currentRow))
+    }
+    while (currentRow != end.row) {
+        currentRow++
+        list.add(Square(currentColumn, currentRow))
+    }
+    return list
 }
 
 /**
@@ -223,18 +279,18 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
 private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2, -1 to -2, -2 to 1, -2 to -1)
 
 // волновой алгоритм
-fun waveKnight(start: Square, end: Square): List<Square> {
+fun knightWaveWay(start: Square, end: Square): List<Square> {
     val map = mutableMapOf<Square, List<Square>>()
     map[start] = listOf()
     var index = 0
     while (map[end] == null) {
         for ((i, j) in map.filter { (_, j) -> j.size == index }) {
-            val hop = j + i
+            val way = j + i
             val x = i.column
             val y = i.row
             for ((dx, dy) in directionOfKnight) {
                 if (Square(dx + x, dy + y).inside())
-                    map[Square(dx + x, dy + y)] = hop
+                    map[Square(dx + x, dy + y)] = way
                 if (map[end] != null) return map[end]!!
             }
         }
@@ -247,7 +303,7 @@ fun waveKnight(start: Square, end: Square): List<Square> {
 fun knightMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside())
     if (start == end) return 0
-    return waveKnight(start, end).size
+    return knightWaveWay(start, end).size
 }
 
 /**
@@ -272,5 +328,5 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  */
 fun knightTrajectory(start: Square, end: Square): List<Square> {
     require(start.inside() && end.inside())
-    return waveKnight(start, end) + end
+    return knightWaveWay(start, end) + end
 }
