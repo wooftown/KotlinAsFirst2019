@@ -133,7 +133,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside())
     if (start == end) return 0
     if ((start.column + start.row) % 2 != (end.column + end.row) % 2) return -1
-    return if (abs(start.column - start.row) == abs(end.column - end.row)) 1 else 2
+    return if (start.column + start.row == end.column + end.row) 1 else 2
 }
 
 /**
@@ -155,22 +155,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
-    if (bishopMoveNumber(start, end) == -1) return listOf()
-    val list = mutableListOf(start)
-    if (start == end) return list
-    if (start.column - start.row != end.column - end.row) {
-        val square1 = Square(
-            (end.row + end.column - start.row + start.column) / 2,
-            (end.row + end.column + start.row - start.column) / 2
-        )
-        val square2 = Square(
-            (start.row + start.column - end.row + end.column) / 2,
-            (start.row + start.column + end.row - end.column) / 2
-        )
-        if (square1.inside()) list.add(square1) else list.add(square2)
-    }
-    list.add(end)
-    return list
+        TODO()
 }
 
 /**
