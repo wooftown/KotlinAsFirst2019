@@ -74,6 +74,7 @@ class Tests {
         assertEquals(-1, bishopMoveNumber(square("a1"), square("g8")))
         assertEquals(-1, bishopMoveNumber(square("c1"), square("f3")))
         assertEquals(0, bishopMoveNumber(square("d4"), square("d4")))
+        assertEquals(1, bishopMoveNumber(square("a5"), square("e1")))
         assertEquals(1, bishopMoveNumber(square("a3"), square("e7")))
         assertEquals(2, bishopMoveNumber(square("c1"), square("c7")))
     }
