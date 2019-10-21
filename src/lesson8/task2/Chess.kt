@@ -200,6 +200,7 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  */
 
 fun kingTrajectory(start: Square, end: Square): List<Square> {
+    TODO()
     require(start.inside() && end.inside())
     val list = mutableListOf(start)
     if (end == start) return list
@@ -235,7 +236,6 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
         currentRow++
         list.add(Square(currentColumn, currentRow))
     }
-    return list
 }
 
 /**

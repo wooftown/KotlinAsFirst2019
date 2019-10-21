@@ -207,13 +207,9 @@ fun bestLongJump(jumps: String): Int {
     val parts = jumps.split(' ')
     var result = -1
     for (i in parts) {
-        try {
-            val next = i.toInt()
-            if (next > result) {
-                result = next
-            }
-        } catch (e: NumberFormatException) {
-            continue
+        val next = i.toIntOrNull()
+        if ((next != null) && (next > result)) {
+            result = next
         }
     }
     return result
@@ -230,12 +226,10 @@ fun bestLongJump(jumps: String): Int {
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
- * ([0-9]+[ ]*[%+ -]+)+
- * (\d+[ ]*[%+ -]+)+
- * (\d+ [%+ -]+)+
+ * (\d+ [%+-]+ )*(\d+ [%+-]+)
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+ [%+ -]+)+"""))) {
+    if (!jumps.matches(Regex("""(\d+ [%+-]+ )*(\d+ [%+-]+)"""))) {
         return -1
     }
     val list = jumps.split(' ')
@@ -308,7 +302,7 @@ fun firstDuplicateIndex(str: String): Int {
  * ([^\s;]+ (\d*.?\d+; |\d*.?\d+))+
  */
 fun mostExpensive(description: String): String {
-    if (!description.matches(Regex("""([^\s;]+ (\d*.?\d+; |\d*.?\d+))+"""))) {
+    if (!description.matches(Regex("""([^\s;]+ \d*.?\d+; )*([^\s;]+ \d*.?\d+)"""))) {
         return ""
     }
     val list = description.split("; ")
@@ -361,9 +355,9 @@ fun fromRoman(roman: String): Int {
     var index = 0
     while (index != roman.length) {
         val oneSymbol = roman.substring(index, index + 1)
-        val twoSymbols = try {
+        val twoSymbols = if (index + 2 <= roman.length) {
             roman.substring(index, index + 2)
-        } catch (e: StringIndexOutOfBoundsException) {
+        } else {
             ""
         }
         if (twoSymbols in subtractionList) {
