@@ -87,7 +87,7 @@ fun diameter(vararg points: Point): Segment {
     require(pts.size > 1)
     var max = pts[0] to pts[0]
     for (i in pts.indices) {
-        for (j in i+1 until pts.size) {
+        for (j in i + 1 until pts.size) {
             if (pts[i].distance(pts[j]) > max.first.distance(max.second)) {
                 max = pts[i] to pts[j]
             }
@@ -216,13 +216,14 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty())
     if (points.size == 1) return Circle(points.first(), 0.0)
-    val x = diameter(*points)
-    val a = x.begin
-    val b = x.end
-    val res = circleByDiameter(x)
+    val dia = diameter(*points)
+    val a = dia.begin
+    val b = dia.end
+    val res = circleByDiameter(dia)
+    if (points.size == 2) return res
     val c =
         points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(a.distance(b)) }
-    return if ((c != null) && (sqr(c.distance(a)) + sqr(c.distance(b)) - sqr(a.distance(b)) > 0.0)) {
+    return if (sqr(c!!.distance(a)) + sqr(c.distance(b)) - sqr(a.distance(b)) > 0.0) {
         circleByThreePoints(a, b, c)
     } else
         res
