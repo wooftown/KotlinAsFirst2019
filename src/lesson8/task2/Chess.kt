@@ -133,7 +133,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside())
     if (start == end) return 0
     if ((start.column + start.row) % 2 != (end.column + end.row) % 2) return -1
-    return if (abs(start.column - end.column) == abs(start.row + end.row)) 1 else 2
+    return if (abs(start.column - end.column) == abs(start.row - end.row)) 1 else 2
 }
 
 /**
@@ -154,6 +154,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
+
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
     TODO()
 }
@@ -200,7 +201,6 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  */
 
 fun kingTrajectory(start: Square, end: Square): List<Square> {
-    TODO()
     require(start.inside() && end.inside())
     val list = mutableListOf(start)
     if (end == start) return list
@@ -228,14 +228,29 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
             list.add(Square(currentColumn, currentRow))
         }
     }
-    while (currentColumn != end.column) {
-        currentColumn++
-        list.add(Square(currentColumn, currentRow))
+    if (currentColumn < end.column) {
+        while (currentColumn != end.column) {
+            currentColumn++
+            list.add(Square(currentColumn, currentRow))
+        }
+    } else {
+        while (currentColumn != end.column) {
+            currentColumn--
+            list.add(Square(currentColumn, currentRow))
+        }
     }
-    while (currentRow != end.row) {
-        currentRow++
-        list.add(Square(currentColumn, currentRow))
+    if (currentColumn < end.column) {
+        while (currentRow != end.row) {
+            currentRow++
+            list.add(Square(currentColumn, currentRow))
+        }
+    } else {
+        while (currentRow != end.row) {
+            currentRow--
+            list.add(Square(currentColumn, currentRow))
+        }
     }
+    return list
 }
 
 /**
