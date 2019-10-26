@@ -298,8 +298,7 @@ fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
 }
 
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
-    TODO()
-    val result = matrix
+    val result = createMatrix(matrix.height, matrix.width, 0)
     for (row in 0 until matrix.height) {
         for (column in 0 until matrix.width) {
             result[row, column] = leftUpSum(matrix, row, column)
@@ -329,7 +328,29 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun findPart(key: Matrix<Int>, lock: Matrix<Int>, x: Int, y: Int): Matrix<Int> {
+    val result = createMatrix(key.height, key.width, -1)
+    for (row in x until x + key.height) {
+        for (column in y until y + key.width) {
+            if (lock[row, column] == 1) {
+                result[row - x, column - y] = 0
+            } else {
+                result[row - x, column - y] = 1
+            }
+        }
+    }
+    return result
+}
+
+
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    for (row in 0 until lock.height - key.height + 1) {
+        for (column in 0 until lock.width - key.width + 1) {
+            if (key == findPart(key, lock, row, column)) return Triple(true, row, column)
+        }
+    }
+    return Triple(false, 0, 0)
+}
 
 /**
  * Простая
@@ -337,7 +358,15 @@ fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> 
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
+    val result = MatrixImpl(height, width, 0)
+    for (row in 0 until height) {
+        for (column in 0 until width) {
+            result[row, column] = -get(row, column)
+        }
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -347,7 +376,18 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
  * В противном случае бросить IllegalArgumentException.
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
-operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
+    require(width == other.height)
+    val result = createMatrix(height, other.width, 0)
+    for (row in 0 until height) {
+        for (column in 0 until other.width) {
+            for (k in 0 until width) {
+                result[row, column] += (get(row, k) * other[k, column])
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
