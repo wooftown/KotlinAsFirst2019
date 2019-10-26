@@ -181,17 +181,15 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
  */
 fun isLatinSquare(matrix: Matrix<Int>): Boolean {
     if (matrix.height != matrix.width) return false
-    var matrixImpl = matrix as MatrixImpl<Int>
     val trueSet = mutableSetOf<Int>()
     for (i in 1 until matrix.width + 1) {
         trueSet.add(i)
     }
     for (i in 0 until matrix.width) {
-        if (matrixImpl.rowToList(i).toSet() != trueSet) return false
+        if (matrix.listRow(i).toSet() != trueSet) return false
     }
-    matrixImpl = rotate(matrixImpl) as MatrixImpl<Int>
     for (i in 0 until matrix.width) {
-        if (matrixImpl.rowToList(i).toSet() != trueSet) return false
+        if (matrix.listColumn(i).toSet() != trueSet) return false
     }
     return true
 }
