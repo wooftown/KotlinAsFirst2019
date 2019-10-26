@@ -73,7 +73,7 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      *
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
-    fun contains(point: HexPoint): Boolean = TODO()
+    fun contains(point: HexPoint): Boolean = point.distance(center) <= radius
 }
 
 /**
@@ -88,7 +88,7 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * Такими являются, например, отрезок 30-34 (горизонталь), 13-63 (прямая диагональ) или 51-24 (косая диагональ).
      * А, например, 13-26 не является "правильным" отрезком.
      */
-    fun isValid(): Boolean = TODO()
+    fun isValid(): Boolean = direction() != Direction.INCORRECT
 
     /**
      * Средняя
@@ -97,7 +97,15 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * Для "правильного" отрезка выбирается одно из первых шести направлений,
      * для "неправильного" -- INCORRECT.
      */
-    fun direction(): Direction = TODO()
+    fun direction(): Direction = when {
+        (begin.y == end.y) && (begin.x < end.x) -> Direction.RIGHT
+        (begin.y == end.y) && (begin.x > end.x) -> Direction.LEFT
+        (begin.y < end.y) && (begin.x == end.x) -> Direction.UP_RIGHT
+        (begin.y > end.y) && (begin.x == end.x) -> Direction.DOWN_LEFT
+        (begin.y < end.y) && (begin.x > end.x) -> Direction.UP_LEFT
+        (begin.y > end.y) && (begin.x < end.x) -> Direction.DOWN_RIGHT
+        else -> Direction.INCORRECT
+    }
 
     override fun equals(other: Any?) =
         other is HexSegment && (begin == other.begin && end == other.end || end == other.begin && begin == other.end)
@@ -128,6 +136,16 @@ enum class Direction {
      */
     fun opposite(): Direction = TODO()
 
+    /* when () {
+            RIGHT -> LEFT
+            UP_RIGHT -> DOWN_LEFT
+            UP_LEFT -> DOWN_RIGHT
+            LEFT -> RIGHT
+            DOWN_LEFT -> UP_RIGHT
+            DOWN_RIGHT -> UP_LEFT
+            else -> INCORRECT
+        }
+    */
     /**
      * Средняя
      *

@@ -24,6 +24,21 @@ interface Matrix<E> {
     operator fun get(row: Int, column: Int): E
 
     operator fun get(cell: Cell): E
+    fun listColumn(column: Int): List<E> {
+        var list = mutableListOf<E>()
+        for (row in 0 until height) {
+            list.add(get(row, column))
+        }
+        return list
+    }
+
+    fun listRow(row: Int): List<E> {
+        var list = mutableListOf<E>()
+        for (column in 0 until width) {
+            list.add(get(row, column))
+        }
+        return list
+    }
 
     /**
      * Запись в ячейку.
@@ -34,38 +49,41 @@ interface Matrix<E> {
     operator fun set(cell: Cell, value: E)
 }
 
-/**
- * Простая
- *
- * Метод для создания матрицы, должен вернуть РЕАЛИЗАЦИЮ Matrix<E>.
- * height = высота, width = ширина, e = чем заполнить элементы.
- * Бросить исключение IllegalArgumentException, если height или width <= 0.
- */
-fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
-/**
- * Средняя сложность
- *
- * Реализация интерфейса "матрица"
- */
-class MatrixImpl<E> : Matrix<E> {
-    override val height: Int = TODO()
 
-    override val width: Int = TODO()
+fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = MatrixImpl(height, width, e)
 
-    override fun get(row: Int, column: Int): E = TODO()
 
-    override fun get(cell: Cell): E = TODO()
+class MatrixImpl<E>(override val height: Int, override val width: Int, default: E) : Matrix<E> {
+    private val info = List(height) { MutableList(width) { default } }
+
+    override fun get(row: Int, column: Int): E = info[row][column]
+
+    override fun get(cell: Cell): E = info[cell.row][cell.column]
+
+    fun rowToList(row: Int): List<E> = info[row]
+
 
     override fun set(row: Int, column: Int, value: E) {
-        TODO()
+        info[row][column] = value
     }
 
     override fun set(cell: Cell, value: E) {
-        TODO()
+        set(cell.row, cell.column, value)
     }
 
-    override fun equals(other: Any?) = TODO()
+    override fun equals(other: Any?) =
+        other is MatrixImpl<*> &&
+                height == other.height &&
+                width == other.width &&
+                info == other.info
 
-    override fun toString(): String = TODO()
+    override fun hashCode(): Int {
+        var result = 5
+        result = result * 31 + height
+        result = result * 31 + width
+        return result
+    }
+
+    override fun toString(): String = info.joinToString { it.joinToString() }
 }
 
