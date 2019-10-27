@@ -1,7 +1,8 @@
-@file:Suppress("UNUSED_PARAMETER")
+@file:Suppress("UNUSED_PARAMETER", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 
 package lesson9.task2
 
+import lesson9.task1.Cell
 import lesson9.task1.Matrix
 import lesson9.task1.MatrixImpl
 import lesson9.task1.createMatrix
@@ -221,8 +222,8 @@ fun addZeros(matrix: Matrix<Int>): Matrix<Int> {
     return result
 }
 
-private val dirList = listOf(-1 to -1, 1 to 1, 1 to -1, -1 to 1, 0 to 1, 0 to -1, 1 to 0, -1 to 0)
 fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    val dirList = listOf(-1 to -1, 1 to 1, 1 to -1, -1 to 1, 0 to 1, 0 to -1, 1 to 0, -1 to 0)
     val newMatrix = addZeros(matrix)
     val result = matrix
     for (row in 0 until matrix.height) {
@@ -368,6 +369,17 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
     return result
 }
 
+fun Matrix<Int>.duplicate(): Matrix<Int> {
+    val result = MatrixImpl(height, width, 0)
+    for (row in 0 until height) {
+        for (column in 0 until width) {
+            result[row, column] = get(row, column)
+        }
+    }
+    return result
+}
+
+
 /**
  * Средняя
  *
@@ -388,6 +400,7 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
     }
     return result
 }
+
 
 /**
  * Сложная
@@ -416,7 +429,36 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
+private val fifteenDir = listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)
+
+fun findNearZero(matrix: Matrix<Int>, x: Int, zero: Cell): Cell {
+    for ((i, j) in fifteenDir) {
+        val row = zero.row + j
+        val column = zero.column + i
+        if ((column in 0..3) && (row in 0..3) && (matrix[row, column] == x)) {
+            return Cell(row, column)
+        }
+    }
+    return zero
+}
+
+
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    var zero = Cell(0, 0)
+    for (i in 0..3) {
+        for (j in 0..3) {
+            if (matrix[i, j] == 0) zero = Cell(i, j)
+        }
+    }
+    for (i in moves) {
+        val next = findNearZero(matrix, i, zero)
+        if (next == zero) throw IllegalStateException()
+        matrix[zero] = i
+        matrix[next] = 0
+        zero = next
+    }
+    return matrix
+}
 
 /**
  * Очень сложная
@@ -457,4 +499,13 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO(
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
-fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> = TODO()
+fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
+    TODO()
+    val winCondition = createMatrix(4, 4, 0)
+    var k = 1
+    for (row in 0..3){
+        for(column in 0..3){
+            winCondition[row,column]=k++
+        }
+    }
+}
