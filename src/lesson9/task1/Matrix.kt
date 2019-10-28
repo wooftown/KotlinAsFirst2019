@@ -40,6 +40,15 @@ interface Matrix<E> {
         return list
     }
 
+    fun cellNumber(int: Int): Cell {
+        for (row in 0..3) {
+            for (column in 0..3) {
+                if (get(row, column) == int) return Cell(row, column)
+            }
+        }
+        return Cell(0, 0)
+    }
+
     /**
      * Запись в ячейку.
      * Методы могут бросить исключение, если ячейка не существует
@@ -65,7 +74,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, default: 
     override fun get(cell: Cell): E = info[cell.row][cell.column]
 
     fun rowToList(row: Int): List<E> = info[row]
-
 
     override fun set(row: Int, column: Int, value: E) {
         info[row][column] = value

@@ -6,6 +6,8 @@ import lesson9.task1.Cell
 import lesson9.task1.Matrix
 import lesson9.task1.MatrixImpl
 import lesson9.task1.createMatrix
+import java.util.*
+import kotlin.math.abs
 
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
@@ -42,10 +44,10 @@ fun <E> transpose(matrix: Matrix<E>): Matrix<E> {
 operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
     require(!(width != other.width || height != other.height))
     if (width < 1 || height < 1) return this
-    val result = createMatrix(height, width, this[0, 0])
+    val result = this.copy()
     for (i in 0 until height) {
         for (j in 0 until width) {
-            result[i, j] = this[i, j] + other[i, j]
+            result[i, j] += other[i, j]
         }
     }
     return result
@@ -158,7 +160,7 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> {
  */
 fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
     require(matrix.height == matrix.width)
-    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    val result = matrix.copy()
     for (x in 0 until matrix.height) {
         for (y in 0 until matrix.width) {
             result[x, matrix.height - y - 1] = matrix[y, x]
@@ -225,7 +227,7 @@ fun addZeros(matrix: Matrix<Int>): Matrix<Int> {
 fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
     val dirList = listOf(-1 to -1, 1 to 1, 1 to -1, -1 to 1, 0 to 1, 0 to -1, 1 to 0, -1 to 0)
     val newMatrix = addZeros(matrix)
-    val result = matrix
+    val result = matrix.copy()
     for (row in 0 until matrix.height) {
         for (column in 0 until matrix.width) {
             var sum = 0
@@ -299,7 +301,7 @@ fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
 }
 
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
-    val result = createMatrix(matrix.height, matrix.width, 0)
+ val result = createMatrix(matrix.height, matrix.width, 0)
     for (row in 0 until matrix.height) {
         for (column in 0 until matrix.width) {
             result[row, column] = leftUpSum(matrix, row, column)
@@ -369,11 +371,11 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
     return result
 }
 
-fun Matrix<Int>.duplicate(): Matrix<Int> {
-    val result = MatrixImpl(height, width, 0)
+private fun <T> Matrix<T>.copy(): Matrix<T> {
+    val result = createMatrix(height, width, this[0, 0])
     for (row in 0 until height) {
         for (column in 0 until width) {
-            result[row, column] = get(row, column)
+            result[row, column] = this[row, column]
         }
     }
     return result
@@ -444,6 +446,7 @@ fun findNearZero(matrix: Matrix<Int>, x: Int, zero: Cell): Cell {
 
 
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    val result = matrix.copy()
     var zero = Cell(0, 0)
     for (i in 0..3) {
         for (j in 0..3) {
@@ -499,13 +502,25 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
+
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     TODO()
-    val winCondition = createMatrix(4, 4, 0)
+    val winConditionFirst = createMatrix(4, 4, 0)
     var k = 1
-    for (row in 0..3){
-        for(column in 0..3){
-            winCondition[row,column]=k++
+    var zero = Cell(0, 0)
+    for (row in 0..3) {
+        for (column in 0..3) {
+            if (matrix[row, column] == 0) zero = Cell(row, column)
+            winConditionFirst[row, column] = k++
         }
     }
+    winConditionFirst[3, 3] = 0
+    val winConditionSecond = winConditionFirst.copy()
+    winConditionSecond[3, 2] = 14
+    winConditionSecond[3, 1] = 15
+
+    if (matrix == winConditionFirst || matrix == winConditionSecond) return listOf()
+    val set = mutableSetOf(matrix)
+
 }
+
