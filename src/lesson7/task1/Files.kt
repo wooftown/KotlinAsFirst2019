@@ -476,30 +476,30 @@ fun multiplicationList(x: Int, lhv: Int): List<Int> {
 }
 
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    val res = lhv * rhv
-    val place = numberLength(res) + 1
+    val result = lhv * rhv
+    val freePlace = numberLength(result) + 1
     val list = multiplicationList(rhv, lhv)
     File(outputName).bufferedWriter().use {
-        it.write(" ".repeat(place - numberLength(lhv)) + lhv)
+        it.write(" ".repeat(freePlace - numberLength(lhv)) + lhv)
         it.newLine()
-        it.write("*" + " ".repeat(place - numberLength(rhv) - 1) + rhv)
+        it.write("*" + " ".repeat(freePlace - numberLength(rhv) - 1) + rhv)
         it.newLine()
-        it.write("-".repeat(place))
+        it.write("-".repeat(freePlace))
         it.newLine()
 
         for (i in 0 until numberLength(rhv)) {
             val count = numberLength(list[i])
             if (i == 0) {
-                it.write(" ".repeat(place - count) + list[i])
+                it.write(" ".repeat(freePlace - count) + list[i])
 
             } else {
-                it.write('+' + " ".repeat(place - i - count - 1) + list[i])
+                it.write('+' + " ".repeat(freePlace - i - count - 1) + list[i])
             }
             it.newLine()
         }
-        it.write("-".repeat(place))
+        it.write("-".repeat(freePlace))
         it.newLine()
-        it.write(" ".repeat(place - numberLength(res)) + res)
+        it.write(" ".repeat(freePlace - numberLength(result)) + result)
 
         it.close()
     }
@@ -565,36 +565,37 @@ fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val list = divisionList(lhv, rhv)
-    var x = list[0].first
-    var y = list[0].second
-    var spaces = if (numberLength(x) == numberLength(y)) 1 else 0
-    var maxLenght = max(numberLength(x), numberLength(y) + 1)
-    var res = x - y
+    var divisible = list[0].first
+    var deducted = list[0].second
+    var spaces = if (numberLength(divisible) == numberLength(deducted)) 1 else 0
+    var maxLength = max(numberLength(divisible), numberLength(deducted) + 1)
+    var res = divisible - deducted
     File(outputName).bufferedWriter().use {
         it.write(" ".repeat(spaces) + "$lhv | $rhv\n")
         it.write(
-            " ".repeat(maxLenght - numberLength(y) - 1) + "-" + y + " ".repeat(numberLength(lhv) + 3 + spaces - maxLenght) + lhv / rhv
+            " ".repeat(maxLength - numberLength(deducted) - 1) + "-" + deducted +
+                    " ".repeat(numberLength(lhv) + 3 + spaces - maxLength) + lhv / rhv
         )
         it.newLine()
-        it.write("-".repeat(maxLenght))
+        it.write("-".repeat(maxLength))
         it.newLine()
-        spaces = maxLenght
+        spaces = maxLength
         for (i in 1 until list.size) {
             spaces++
-            x = list[i].first
-            y = list[i].second
-            maxLenght = max(numberLength(x), numberLength(y) + 1)
+            divisible = list[i].first
+            deducted = list[i].second
+            maxLength = max(numberLength(divisible), numberLength(deducted) + 1)
             if (res == 0) {
-                it.write(" ".repeat(spaces - numberLength(x) - 1) + "0" + x)
+                it.write(" ".repeat(spaces - numberLength(divisible) - 1) + "0" + divisible)
             } else {
-                it.write(" ".repeat(spaces - numberLength(x)) + x)
+                it.write(" ".repeat(spaces - numberLength(divisible)) + divisible)
             }
             it.newLine()
-            it.write(" ".repeat(spaces - numberLength(y) - 1) + "-" + y)
+            it.write(" ".repeat(spaces - numberLength(deducted) - 1) + "-" + deducted)
             it.newLine()
-            it.write(" ".repeat(spaces - maxLenght) + "-".repeat(maxLenght))
+            it.write(" ".repeat(spaces - maxLength) + "-".repeat(maxLength))
             it.newLine()
-            res = x - y
+            res = divisible - deducted
         }
         it.write(" ".repeat(spaces - numberLength(lhv % rhv)) + lhv % rhv)
         it.close()

@@ -522,7 +522,6 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val 
 }
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    TODO()
     val winFirst = createMatrix(4, 4, 0)
     var k = 1
     var zero = Cell(0, 0)
@@ -547,10 +546,23 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         }
         return f
     }
-
     val passedGrounds = mutableSetOf(matrix)
     val queue = PriorityQueue<Fifteen>(compareBy { it.f })
     queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
-
+    while (queue.isNotEmpty()) {
+        val nextFifteen = queue.poll()
+        for (hop in nextFifteen.findNear()) {
+            val nextGround = nextFifteen.ground.copy()
+            nextGround[nextFifteen.cell] = nextGround[hop]
+            nextGround[hop] = 0
+            val nextHops = nextFifteen.hops.toMutableList()
+            nextHops.add(nextGround[nextFifteen.cell])
+            if (nextGround == winFirst || nextGround == winSecond) return nextHops
+            if (nextGround in passedGrounds) continue
+            passedGrounds.add(nextGround)
+            queue.add(Fifteen(nextGround, nextHops, hop, findF(nextGround)))
+        }
+    }
+    return listOf()
 }
 

@@ -197,8 +197,8 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * r = abc/4s
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val rad = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-    return Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), rad)
+    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+    return Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
 }
 
 /**
@@ -216,14 +216,14 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty())
     if (points.size == 1) return Circle(points.first(), 0.0)
-    val dia = diameter(*points)
-    val a = dia.begin
-    val b = dia.end
-    val res = circleByDiameter(dia)
+    val diameter = diameter(*points)
+    val a = diameter.begin
+    val b = diameter.end
+    val res = circleByDiameter(diameter)
     if (points.size == 2) return res
     val c =
-        points.filter { it != a && it != b }.maxBy { it.distance(dia.midPoint()) }
-    return if (c!!.distance(dia.midPoint()) > res.radius) {
+        points.filter { it != a && it != b }.maxBy { it.distance(diameter.midPoint()) }
+    return if (c!!.distance(diameter.midPoint()) > res.radius) {
         circleByThreePoints(a, b, c)
     } else
         res
