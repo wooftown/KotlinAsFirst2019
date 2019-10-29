@@ -4,7 +4,6 @@ package lesson8.task2
 
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -43,7 +42,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     require(notation.matches(Regex("""[a-h][1-8]""")))
-    return Square((notation.first() - 'a') + 1, notation.last().toString().toInt())
+    return Square(notation.first() - 'a' + 1, notation.last() - '0')
 }
 
 /**
@@ -69,15 +68,14 @@ fun square(notation: String): Square {
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside())
-    if (end == start) return 0
-    return if ((start.column == end.column) || (start.row == end.row)) {
-        1
-    } else {
-        2
+fun rookMoveNumber(start: Square, end: Square): Int =
+    when {
+        !start.inside() || !end.inside() -> throw IllegalArgumentException()
+        end == start -> 0
+        start.row == end.row || start.column == end.column -> 1
+        else -> 2
     }
-}
+
 
 /**
  * Средняя
@@ -93,8 +91,10 @@ fun rookMoveNumber(start: Square, end: Square): Int {
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> {
-    TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNumber(start, end)) {
+    0 -> listOf(start)
+    1 -> listOf(start, end)
+    else -> listOf(start, Square(start.column, end.row), end)
 }
 
 /**
@@ -192,56 +192,7 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  */
 
 fun kingTrajectory(start: Square, end: Square): List<Square> {
-    require(start.inside() && end.inside())
-    val list = mutableListOf(start)
-    if (end == start) return list
-    var dxToDy = 0 to 0
-    var currentColumn = list.last().column
-    var currentRow = list.last().row
-    if (end.column > start.column) {
-        dxToDy = if (end.row > start.row) {
-            1 to 1
-        } else {
-            1 to -1
-        }
-    }
-    if (start.column > end.column) {
-        dxToDy = if (end.row > start.row) {
-            -1 to 1
-        } else {
-            -1 to -1
-        }
-    }
-    if (dxToDy != 0 to 0) {
-        for (i in 1..min(abs(end.column - start.column), abs(end.row - start.row))) {
-            currentColumn += dxToDy.first
-            currentRow += dxToDy.second
-            list.add(Square(currentColumn, currentRow))
-        }
-    }
-    if (currentColumn < end.column) {
-        while (currentColumn != end.column) {
-            currentColumn++
-            list.add(Square(currentColumn, currentRow))
-        }
-    } else {
-        while (currentColumn != end.column) {
-            currentColumn--
-            list.add(Square(currentColumn, currentRow))
-        }
-    }
-    if (currentColumn < end.column) {
-        while (currentRow != end.row) {
-            currentRow++
-            list.add(Square(currentColumn, currentRow))
-        }
-    } else {
-        while (currentRow != end.row) {
-            currentRow--
-            list.add(Square(currentColumn, currentRow))
-        }
-    }
-    return list
+    TODO()
 }
 
 /**
@@ -271,17 +222,17 @@ private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2
 
 // волновой алгоритм
 fun knightWaveWay(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
     val map = mutableMapOf<Square, List<Square>>()
     map[start] = listOf()
     var index = 0
     while (map[end] == null) {
         for ((i, j) in map.filter { (_, j) -> j.size == index }) {
             val way = j + i
-            val x = i.column
-            val y = i.row
             for ((dx, dy) in directionOfKnight) {
-                if (Square(dx + x, dy + y).inside())
-                    map[Square(dx + x, dy + y)] = way
+                if (Square(dx + i.column, dy + i.row).inside())
+                    if (map[Square(dx + i.column, dy + i.row)] == null)
+                        map[Square(dx + i.column, dy + i.row)] = way
                 if (map[end] != null) return map[end]!!
             }
         }
@@ -291,11 +242,11 @@ fun knightWaveWay(start: Square, end: Square): List<Square> {
 }
 
 
-fun knightMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside())
-    if (start == end) return 0
-    return knightWaveWay(start, end).size
-}
+fun knightMoveNumber(start: Square, end: Square): Int = if (start == end) {
+    0
+} else
+    knightWaveWay(start, end).size
+
 
 /**
  * Очень сложная
@@ -317,7 +268,5 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> {
-    require(start.inside() && end.inside())
-    return knightWaveWay(start, end) + end
-}
+fun knightTrajectory(start: Square, end: Square): List<Square> = knightWaveWay(start, end) + end
+
