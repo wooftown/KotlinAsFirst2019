@@ -222,7 +222,6 @@ private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2
 
 // волновой алгоритм
 fun knightWaveWay(start: Square, end: Square): List<Square> {
-    require(start.inside() && end.inside())
     val map = mutableMapOf<Square, List<Square>>()
     map[start] = listOf()
     var index = 0
@@ -242,11 +241,14 @@ fun knightWaveWay(start: Square, end: Square): List<Square> {
 }
 
 
-fun knightMoveNumber(start: Square, end: Square): Int = if (start == end) {
-    0
-} else
-    knightWaveWay(start, end).size
-
+fun knightMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    return if (start == end) {
+        0
+    } else {
+        knightWaveWay(start, end).size
+    }
+}
 
 /**
  * Очень сложная

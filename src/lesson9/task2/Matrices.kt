@@ -522,6 +522,7 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val 
 }
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
+    TODO()
     val winFirst = createMatrix(4, 4, 0)
     var k = 1
     var zero = Cell(0, 0)
