@@ -25,7 +25,7 @@ interface Matrix<E> {
 
     operator fun get(cell: Cell): E
     fun listColumn(column: Int): List<E> {
-        var list = mutableListOf<E>()
+        val list = mutableListOf<E>()
         for (row in 0 until height) {
             list.add(get(row, column))
         }
@@ -33,7 +33,7 @@ interface Matrix<E> {
     }
 
     fun listRow(row: Int): List<E> {
-        var list = mutableListOf<E>()
+        val list = mutableListOf<E>()
         for (column in 0 until width) {
             list.add(get(row, column))
         }
