@@ -140,7 +140,7 @@ enum class Direction {
      * Вернуть направление, противоположное данному.
      * Для INCORRECT вернуть INCORRECT
      */
-    fun opposite(): Direction = when (Direction.values()[ordinal]) {
+    fun opposite() = when (values()[ordinal]) {
         RIGHT -> LEFT
         UP_RIGHT -> DOWN_LEFT
         UP_LEFT -> DOWN_RIGHT
@@ -162,7 +162,7 @@ enum class Direction {
      */
     fun next(): Direction {
         require(this != INCORRECT)
-        return Direction.values()[(ordinal + 1) % 6]
+        return values()[(ordinal + 1) % 6]
     }
 
     /**
