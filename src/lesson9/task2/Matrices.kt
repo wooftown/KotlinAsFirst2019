@@ -301,7 +301,7 @@ fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
 }
 
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
- val result = createMatrix(matrix.height, matrix.width, 0)
+    val result = createMatrix(matrix.height, matrix.width, 0)
     for (row in 0 until matrix.height) {
         for (column in 0 until matrix.width) {
             result[row, column] = leftUpSum(matrix, row, column)
@@ -450,17 +450,17 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
     var zero = Cell(0, 0)
     for (i in 0..3) {
         for (j in 0..3) {
-            if (matrix[i, j] == 0) zero = Cell(i, j)
+            if (result[i, j] == 0) zero = Cell(i, j)
         }
     }
     for (i in moves) {
-        val next = findNearZero(matrix, i, zero)
+        val next = findNearZero(result, i, zero)
         if (next == zero) throw IllegalStateException()
-        matrix[zero] = i
-        matrix[next] = 0
+        result[zero] = i
+        result[next] = 0
         zero = next
     }
-    return matrix
+    return result
 }
 
 /**
@@ -503,24 +503,54 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
 
+
+fun main() = Unit
+
+
+class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val f: Int) {
+    fun findNear(): List<Cell> {
+        val list = mutableListOf<Cell>()
+        for ((i, j) in fifteenDir) {
+            val row = cell.row + j
+            val column = cell.column + i
+            if ((column in 0..3) && (row in 0..3)) {
+                list.add(Cell(row, column))
+            }
+        }
+        return list
+    }
+}
+
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     TODO()
-    val winConditionFirst = createMatrix(4, 4, 0)
+    val winFirst = createMatrix(4, 4, 0)
     var k = 1
     var zero = Cell(0, 0)
     for (row in 0..3) {
         for (column in 0..3) {
             if (matrix[row, column] == 0) zero = Cell(row, column)
-            winConditionFirst[row, column] = k++
+            winFirst[row, column] = k++
         }
     }
-    winConditionFirst[3, 3] = 0
-    val winConditionSecond = winConditionFirst.copy()
-    winConditionSecond[3, 2] = 14
-    winConditionSecond[3, 1] = 15
+    winFirst[3, 3] = 0
+    val winSecond = winFirst.copy()
+    winSecond[3, 2] = 14
+    winSecond[3, 1] = 15
+    if (matrix == winFirst || matrix == winSecond) return listOf()
+    fun findF(funMatrix: Matrix<Int>): Int {
+        var f = 0
+        for (row in 0..3) {
+            for (column in 0..3) {
+                val cell = winFirst.cellNumber(funMatrix[row, column])
+                f += abs(cell.row - row) + abs(cell.column - column)
+            }
+        }
+        return f
+    }
 
-    if (matrix == winConditionFirst || matrix == winConditionSecond) return listOf()
-    val set = mutableSetOf(matrix)
+    val passedGrounds = mutableSetOf(matrix)
+    val queue = PriorityQueue<Fifteen>(compareBy { it.f })
+    queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
 
 }
 

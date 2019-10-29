@@ -25,7 +25,7 @@ class Triangle private constructor(private val points: Set<Point>) {
 
     val c: Point get() = pointList[2]
 
-    constructor(a: Point, b: Point, c: Point) : this(linkedSetOf(a, b, c))
+    constructor(a: Point, b: Point, c: Point) : this(linkedSetOf(a, b, c) as Set<Point>)
 
     fun halfPerimeter() = (a.distance(b) + b.distance(c) + c.distance(a)) / 2.0
     fun perimeter() = (a.distance(b) + b.distance(c) + c.distance(a))
@@ -222,8 +222,8 @@ fun minContainingCircle(vararg points: Point): Circle {
     val res = circleByDiameter(dia)
     if (points.size == 2) return res
     val c =
-        points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(a.distance(b)) }
-    return if (sqr(c!!.distance(a)) + sqr(c.distance(b)) - sqr(a.distance(b)) > 0.0) {
+        points.filter { it != a && it != b }.maxBy { it.distance(dia.midPoint()) }
+    return if (c!!.distance(dia.midPoint()) > res.radius) {
         circleByThreePoints(a, b, c)
     } else
         res
