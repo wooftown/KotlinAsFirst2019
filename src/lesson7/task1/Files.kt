@@ -336,6 +336,9 @@ fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
     }
 }
 //пока что ничего умней придумать не могу
+
+
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
     val out = File(outputName).bufferedWriter()
@@ -362,7 +365,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     ind++
                 }
                 "b" -> {
-                    if ("i" in list && list.indexOf("b") < list.indexOf("i")) {
+                    if ("i" in list && "b" in list && list.indexOf("b") < list.indexOf("i")) {
                         out.write(tagWriteListChange(list, "i") + tagWriteListChange(list, "b"))
                         ind += 2
                     } else {

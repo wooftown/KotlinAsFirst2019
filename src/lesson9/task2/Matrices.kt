@@ -504,7 +504,17 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  */
 
 
-fun main() = Unit
+fun main() {
+    val matrix = createMatrix(4, 4, 0)
+    matrix[3, 3] = 0
+    matrix[0, 0] = 1
+    for (i in 2..15) {
+        val row = (i - 1) / 4
+        val column = (i - 1) % 4
+        matrix[row, column] = i
+    }
+    println(matrix)
+}
 
 
 class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val f: Int) {
@@ -539,7 +549,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     winSecond[3, 1] = 15
     if (matrix == winFirst || matrix == winSecond) return listOf()
     fun findF(funMatrix: Matrix<Int>): Int {
-        //памагите с эвристикой =(
         var f = 0
         for (i in 0..3) {
             for (j in 0..3) {
