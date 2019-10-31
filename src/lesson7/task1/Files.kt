@@ -335,7 +335,7 @@ fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
         ("<$tag>")
     }
 }
-//пока что ничего умней придумать не могу
+//пока что ничего умней придумать не могу...
 
 
 
