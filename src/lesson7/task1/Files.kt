@@ -322,7 +322,7 @@ fun tagFindHelper(line: String, num: Int): String {
         '~' -> if (num < line.length - 1 && line[num + 1] == '~') return "s"
         '*' -> return if (num < line.length - 1 && line[num + 1] == '*') "b" else "i"
     }
-    return ""
+    return "null"
 }
 
 fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
@@ -334,7 +334,6 @@ fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
         ("<$tag>")
     }
 }
-
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
     val out = File(outputName).bufferedWriter()
@@ -372,7 +371,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 "i" -> {
                     out.write(tagWriteListChange(list, "i"))
                 }
-                "" -> {
+                "null" -> {
                     out.write(line[ind].toString())
                 }
             }
@@ -382,7 +381,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     out.write("</p></body></html>")
     out.close()
 }
-
 /**
  * Сложная
  *
