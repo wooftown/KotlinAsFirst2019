@@ -521,21 +521,17 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val 
     }
 }
 
-//работаю над эвристикой
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    TODO()
     val winFirst = createMatrix(4, 4, 0)
-    val cellNumber = mutableMapOf(0 to Cell(3, 3))
-    var k = 1
     var zero = Cell(0, 0)
+    var k = 0
     for (row in 0..3) {
         for (column in 0..3) {
             if (matrix[row, column] == 0) {
                 zero = Cell(row, column)
                 continue
             }
-            cellNumber[k] = Cell(row, column)
-            winFirst[row, column] = k++
+            winFirst[row, column] = row * 4 + column + 1
         }
     }
     val winSecond = winFirst.copy()
@@ -543,12 +539,17 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     winSecond[3, 1] = 15
     if (matrix == winFirst || matrix == winSecond) return listOf()
     fun findF(funMatrix: Matrix<Int>): Int {
+        //памагите с эвристикой =(
         var f = 0
-        for (row in 0..3) {
-            for (column in 0..3) {
-                val cell = cellNumber[funMatrix[row, column]]
-                f += abs(cell!!.row - row) + abs(cell!!.column - column)
+        for (i in 0..3) {
+            for (j in 0..3) {
+                f += if (funMatrix[i, j] != 0) {
+                    abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
+                } else {
+                    abs(3 - i) + abs(3 - j)
+                }
             }
+
         }
         return f
     }
@@ -558,6 +559,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
     while (queue.isNotEmpty()) {
         val nextFifteen = queue.poll()
+        println(k++)
         for (hop in nextFifteen.findNear()) {
             val nextGround = nextFifteen.ground.copy()
             nextGround[nextFifteen.cell] = nextGround[hop]

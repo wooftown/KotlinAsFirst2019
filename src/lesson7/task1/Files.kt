@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.util.*
 import kotlin.math.max
 
 
@@ -317,8 +318,70 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun tagFindHelper(line: String, num: Int): String {
+    when (line[num]) {
+        '~' -> if (num < line.length - 1 && line[num + 1] == '~') return "s"
+        '*' -> return if (num < line.length - 1 && line[num + 1] == '*') "b" else "i"
+    }
+    return "null"
+}
+
+fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
+    return if (tag in list) {
+        list.remove(tag)
+        ("</$tag>")
+    } else {
+        list.add(tag)
+        ("<$tag>")
+    }
+}
+//пока что ничего умней придумать не могу
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines().toMutableList()
+    val out = File(outputName).bufferedWriter()
+    val list = ArrayDeque<String>()
+    out.write("<html><body><p>")
+    while (text.isNotEmpty() && text.first() == "") {
+        text.removeAt(0)
+    }
+    var paragraph = false
+    for (line in text) {
+        if (!paragraph && line.isEmpty()) {
+            out.write("</p>")
+            paragraph = true
+        }
+        var ind = 0
+        while (ind < line.length) {
+            if (paragraph) {
+                out.write("<p>")
+                paragraph = false
+            }
+            when (tagFindHelper(line, ind)) {
+                "s" -> {
+                    out.write(tagWriteListChange(list, "s"))
+                    ind++
+                }
+                "b" -> {
+                    if ("i" in list && list.indexOf("b") < list.indexOf("i")) {
+                        out.write(tagWriteListChange(list, "i") + tagWriteListChange(list, "b"))
+                        ind += 2
+                    } else {
+                        ind++
+                        out.write(tagWriteListChange(list, "b"))
+                    }
+                }
+                "i" -> {
+                    out.write(tagWriteListChange(list, "i"))
+                }
+                "null" -> {
+                    out.write(line[ind].toString())
+                }
+            }
+            ind++
+        }
+    }
+    out.write("</p></body></html>")
+    out.close()
 }
 
 /**
