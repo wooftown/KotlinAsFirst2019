@@ -40,15 +40,6 @@ interface Matrix<E> {
         return list
     }
 
-    fun cellNumber(int: Int): Cell {
-        for (row in 0..3) {
-            for (column in 0..3) {
-                if (get(row, column) == int) return Cell(row, column)
-            }
-        }
-        return Cell(0, 0)
-    }
-
     /**
      * Запись в ячейку.
      * Методы могут бросить исключение, если ячейка не существует
