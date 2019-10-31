@@ -382,6 +382,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     out.write("</p></body></html>")
     out.close()
 }
+
 /**
  * Сложная
  *
@@ -599,8 +600,8 @@ fun numberToList(x: Int): List<Int> {
 fun firstDivisor(x: Int, y: Int): Int {
     var a = 0
     val list = numberToList(x)
-    for (i in 0 until list.size) {
-        a = a * 10 + list[i]
+    for (element in list) {
+        a = a * 10 + element
         if (a / y > 0) {
             return a
         }
