@@ -378,7 +378,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             ind++
         }
     }
-    out.write("</p></body></html>")
+    if (!paragraph){
+        out.write("</p>")
+    }
+    out.write("</body></html>")
     out.close()
 }
 /**
