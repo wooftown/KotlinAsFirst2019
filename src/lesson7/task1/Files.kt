@@ -323,31 +323,30 @@ fun tagFindHelper(line: String, num: Int): String {
         '~' -> if (num < line.length - 1 && line[num + 1] == '~') return "s"
         '*' -> return if (num < line.length - 1 && line[num + 1] == '*') "b" else "i"
     }
-    return "null"
+    return ""
 }
 
-fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
-    return if (tag in list) {
-        list.remove(tag)
-        ("</$tag>")
-    } else {
-        list.add(tag)
-        ("<$tag>")
-    }
+fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String =
+    if (tag in list) {
+    list.remove(tag)
+    ("</$tag>")
+} else {
+    list.add(tag)
+    ("<$tag>")
 }
+
 //пока что ничего умней придумать не могу...
-
 
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
     val out = File(outputName).bufferedWriter()
     val list = ArrayDeque<String>()
-    out.write("<html><body><p>")
+    var paragraph = false
     while (text.isNotEmpty() && text.first() == "") {
         text.removeAt(0)
     }
-    var paragraph = false
+    out.write("<html><body><p>")
     for (line in text) {
         if (!paragraph && line.isEmpty()) {
             out.write("</p>")
@@ -376,7 +375,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 "i" -> {
                     out.write(tagWriteListChange(list, "i"))
                 }
-                "null" -> {
+                else -> {
                     out.write(line[ind].toString())
                 }
             }
@@ -386,7 +385,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     out.write("</p></body></html>")
     out.close()
 }
-
 /**
  * Сложная
  *
