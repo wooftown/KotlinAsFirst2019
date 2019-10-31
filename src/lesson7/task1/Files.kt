@@ -315,7 +315,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 </p>
 </body>
 </html>
- *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun tagFindHelper(line: String, num: Int): String {
@@ -326,27 +325,25 @@ fun tagFindHelper(line: String, num: Int): String {
     return ""
 }
 
-fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String =
-    if (tag in list) {
-    list.remove(tag)
-    ("</$tag>")
-} else {
-    list.add(tag)
-    ("<$tag>")
+fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
+    return if (tag in list) {
+        list.remove(tag)
+        ("</$tag>")
+    } else {
+        list.add(tag)
+        ("<$tag>")
+    }
 }
-
-//пока что ничего умней придумать не могу...
-
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
     val out = File(outputName).bufferedWriter()
     val list = ArrayDeque<String>()
-    var paragraph = false
+    out.write("<html><body><p>")
     while (text.isNotEmpty() && text.first() == "") {
         text.removeAt(0)
     }
-    out.write("<html><body><p>")
+    var paragraph = false
     for (line in text) {
         if (!paragraph && line.isEmpty()) {
             out.write("</p>")
@@ -375,7 +372,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 "i" -> {
                     out.write(tagWriteListChange(list, "i"))
                 }
-                else -> {
+                "" -> {
                     out.write(line[ind].toString())
                 }
             }
