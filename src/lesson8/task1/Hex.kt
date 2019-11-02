@@ -140,14 +140,10 @@ enum class Direction {
      * Вернуть направление, противоположное данному.
      * Для INCORRECT вернуть INCORRECT
      */
-    fun opposite() = when (values()[ordinal]) {
-        RIGHT -> LEFT
-        UP_RIGHT -> DOWN_LEFT
-        UP_LEFT -> DOWN_RIGHT
-        LEFT -> RIGHT
-        DOWN_LEFT -> UP_RIGHT
-        DOWN_RIGHT -> UP_LEFT
-        INCORRECT -> INCORRECT
+    fun opposite() = if (ordinal == 6) {
+        values()[6]
+    } else {
+        values()[(ordinal + 3) % 6]
     }
 
     /**
@@ -198,17 +194,16 @@ INCORRECT;  // отрезок имеет изгиб, например 30 -> 55 (
  *
  *
  */
-fun HexPoint.move(direction: Direction, distance: Int): HexPoint {
-    return when (direction) {
-        Direction.RIGHT -> HexPoint(x + distance, y)
-        Direction.UP_RIGHT -> HexPoint(x, y + distance)
-        Direction.UP_LEFT -> HexPoint(x - distance, y + distance) //
-        Direction.LEFT -> HexPoint(x - distance, y)
-        Direction.DOWN_LEFT -> HexPoint(x, y - distance)
-        Direction.DOWN_RIGHT -> HexPoint(x + distance, y - distance) //
-        else -> throw IllegalArgumentException()
-    }
+fun HexPoint.move(direction: Direction, distance: Int): HexPoint = when (direction) {
+    Direction.RIGHT -> HexPoint(x + distance, y)
+    Direction.UP_RIGHT -> HexPoint(x, y + distance)
+    Direction.UP_LEFT -> HexPoint(x - distance, y + distance) //
+    Direction.LEFT -> HexPoint(x - distance, y)
+    Direction.DOWN_LEFT -> HexPoint(x, y - distance)
+    Direction.DOWN_RIGHT -> HexPoint(x + distance, y - distance) //
+    else -> throw IllegalArgumentException()
 }
+
 
 /**
  * Сложная
