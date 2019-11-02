@@ -228,10 +228,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
             if (curChar in lowMap.keys) {
                 if (lowMap[curChar]!!.isNotEmpty()) {
                     if (char.isUpperCase()) {
-                        it.write(
-                            lowMap[curChar]!!.first().toUpperCase()
-                                    + lowMap[curChar]!!.slice(1 until lowMap[curChar]!!.length)
-                        )
+                        it.write(lowMap[curChar]!!.capitalize())
                     } else {
                         it.write(lowMap[curChar]!!)
                     }
@@ -315,12 +312,12 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 </html>
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
-fun tagFindHelper(line: String, num: Int): String {
+fun tagFindHelper(line: String, num: Int): String? {
     when (line[num]) {
         '~' -> if (num < line.length - 1 && line[num + 1] == '~') return "s"
         '*' -> return if (num < line.length - 1 && line[num + 1] == '*') "b" else "i"
     }
-    return "null"
+    return null
 }
 
 fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
@@ -335,53 +332,53 @@ fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
-    val out = File(outputName).bufferedWriter()
+    val output = File(outputName).bufferedWriter()
     val list = ArrayDeque<String>()
-    out.write("<html><body><p>")
+    output.write("<html><body><p>")
     while (text.isNotEmpty() && text.first() == "") {
         text.removeAt(0)
     }
     var paragraph = false
     for (line in text) {
         if (!paragraph && line.isEmpty()) {
-            out.write("</p>")
+            output.write("</p>")
             paragraph = true
         }
         var ind = 0
         while (ind < line.length) {
             if (paragraph) {
-                out.write("<p>")
+                output.write("<p>")
                 paragraph = false
             }
             when (tagFindHelper(line, ind)) {
                 "s" -> {
-                    out.write(tagWriteListChange(list, "s"))
+                    output.write(tagWriteListChange(list, "s"))
                     ind++
                 }
                 "b" -> {
                     if ("i" in list && "b" in list && list.indexOf("b") < list.indexOf("i")) {
-                        out.write(tagWriteListChange(list, "i") + tagWriteListChange(list, "b"))
+                        output.write(tagWriteListChange(list, "i") + tagWriteListChange(list, "b"))
                         ind += 2
                     } else {
                         ind++
-                        out.write(tagWriteListChange(list, "b"))
+                        output.write(tagWriteListChange(list, "b"))
                     }
                 }
                 "i" -> {
-                    out.write(tagWriteListChange(list, "i"))
+                    output.write(tagWriteListChange(list, "i"))
                 }
-                "null" -> {
-                    out.write(line[ind].toString())
+                null -> {
+                    output.write(line[ind].toString())
                 }
             }
             ind++
         }
     }
     if (!paragraph) {
-        out.write("</p>")
+        output.write("</p>")
     }
-    out.write("</body></html>")
-    out.close()
+    output.write("</body></html>")
+    output.close()
 }
 
 /**

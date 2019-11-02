@@ -194,7 +194,6 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  */
 fun kingMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside())
-    if (end == start) return 0
     return max(abs(end.column - start.column), abs(end.row - start.row))
 }
 
