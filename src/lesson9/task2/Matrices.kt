@@ -458,7 +458,7 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
     }
     for (i in moves) {
         val next = findNearZero(result, i, zero)
-        if (next == zero) throw IllegalStateException()
+        check(next != zero)
         result[zero] = i
         result[next] = 0
         zero = next
@@ -511,11 +511,8 @@ fun main() {
     val matrix = createMatrix(4, 4, 0)
     matrix[3, 3] = 0
     matrix[0, 0] = 1
-    for (i in 2..15) {
-        val row = (i - 1) / 4
-        val column = (i - 1) % 4
-        matrix[row, column] = i
-    }
+    //for (i in 2..15) {
+    //  }
     println(matrix)
 }
 
