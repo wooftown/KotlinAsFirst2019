@@ -353,6 +353,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 // понял что тут нужен не жадный алгоритм
+
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val map = mutableMapOf<Int, Pair<Set<String>, Int>>()
     var set = emptySet<String>()
@@ -376,7 +377,6 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
     return set
 }
-
 
 
 

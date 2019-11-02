@@ -290,6 +290,7 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
+/*
 fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
     var sum = 0
     for (i in 0..row) {
@@ -299,12 +300,18 @@ fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
     }
     return sum
 }
-
+*/
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
     val result = createMatrix(matrix.height, matrix.width, 0)
     for (row in 0 until matrix.height) {
         for (column in 0 until matrix.width) {
-            result[row, column] = leftUpSum(matrix, row, column)
+            var k = 0
+            for (x in 0..row) {
+                for (y in 0..column) {
+                    k += matrix[x, y]
+                }
+            }
+            result[row, column] = k
         }
     }
     return result
@@ -335,11 +342,7 @@ fun findPart(key: Matrix<Int>, lock: Matrix<Int>, x: Int, y: Int): Matrix<Int> {
     val result = createMatrix(key.height, key.width, -1)
     for (row in x until x + key.height) {
         for (column in y until y + key.width) {
-            if (lock[row, column] == 1) {
-                result[row - x, column - y] = 0
-            } else {
-                result[row - x, column - y] = 1
-            }
+            result[row - x, column - y] = abs(lock[row, column] - 1)
         }
     }
     return result
@@ -365,7 +368,7 @@ operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
     val result = MatrixImpl(height, width, 0)
     for (row in 0 until height) {
         for (column in 0 until width) {
-            result[row, column] = -get(row, column)
+            result[row, column] = -this[row, column]
         }
     }
     return result
@@ -391,12 +394,12 @@ private fun <T> Matrix<T>.copy(): Matrix<T> {
  * Подробно про порядок умножения см. статью Википедии "Умножение матриц".
  */
 operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
-    require(width == other.height)
-    val result = createMatrix(height, other.width, 0)
-    for (row in 0 until height) {
+    require(this.width == other.height)
+    val result = createMatrix(this.height, other.width, 0)
+    for (row in 0 until this.height) {
         for (column in 0 until other.width) {
-            for (k in 0 until width) {
-                result[row, column] += (get(row, k) * other[k, column])
+            for (k in 0 until this.width) {
+                result[row, column] += (this[row, k] * other[k, column])
             }
         }
     }
@@ -531,6 +534,22 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val 
     }
 }
 
+fun findF(funMatrix: Matrix<Int>): Int {
+    var f = 0
+    for (i in 0..3) {
+        for (j in 0..3) {
+            f += if (funMatrix[i, j] != 0) {
+                abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
+            } else {
+                abs(3 - i) + abs(3 - j)
+            }
+        }
+
+    }
+    return f
+}
+
+
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winFirst = createMatrix(4, 4, 0)
     var zero = Cell(0, 0)
@@ -548,21 +567,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     winSecond[3, 2] = 14
     winSecond[3, 1] = 15
     if (matrix == winFirst || matrix == winSecond) return listOf()
-    fun findF(funMatrix: Matrix<Int>): Int {
-        var f = 0
-        for (i in 0..3) {
-            for (j in 0..3) {
-                f += if (funMatrix[i, j] != 0) {
-                    abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
-                } else {
-                    abs(3 - i) + abs(3 - j)
-                }
-            }
-
-        }
-        return f
-    }
-
     val passedGrounds = mutableSetOf(matrix)
     val queue = PriorityQueue<Fifteen>(compareBy { it.f })
     queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
