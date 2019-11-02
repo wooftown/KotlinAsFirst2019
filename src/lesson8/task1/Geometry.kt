@@ -148,9 +148,9 @@ fun lineByPoints(a: Point, b: Point): Line {
     val tg =
         (a.y - b.y) / (a.x - b.x)
     return if (tg >= 0) {
-        Line(a, atan(tg))
+        Line(a, atan(tg) % PI )
     } else {
-        Line(a, PI - atan(-tg))
+        Line(a, (PI - atan(-tg)) % PI)
     }
 
 }
