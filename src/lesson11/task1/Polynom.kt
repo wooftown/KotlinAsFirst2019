@@ -2,6 +2,8 @@
 
 package lesson11.task1
 
+import kotlin.math.max
+
 /**
  * Класс "полином с вещественными коэффициентами".
  *
@@ -19,17 +21,30 @@ package lesson11.task1
  * Нули в середине и в конце пропускаться не должны, например: x^3+2x+1 --> Polynom(1.0, 2.0, 0.0, 1.0)
  * Старшие коэффициенты, равные нулю, игнорировать, например Polynom(0.0, 0.0, 5.0, 3.0) соответствует 5x+3
  */
+
+
 class Polynom(vararg coeffs: Double) {
+    private val data = coeffs.toList().reversed().dropLastWhile { it == 0.0 }
+
+    constructor(list: List<Double>) : this(*list.toDoubleArray())
 
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
-    fun coeff(i: Int): Double = TODO()
+    fun coeff(i: Int): Double = data[i]
 
     /**
      * Расчёт значения при заданном x
      */
-    fun getValue(x: Double): Double = TODO()
+    fun getValue(x: Double): Double {
+        var k = 1.0
+        var result = 0.0
+        for (i in data) {
+            result += i * k
+            k *= x
+        }
+        return result
+    }
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -38,27 +53,64 @@ class Polynom(vararg coeffs: Double) {
      * Слагаемые с нулевыми коэффициентами игнорировать, т.е.
      * степень 0x^2+0x+2 также равна 0.
      */
-    fun degree(): Int = TODO()
+    fun degree(): Int {
+        for (i in data.indices.reversed()) {
+            if (data[i] != 0.0) return i
+        }
+        return 0
+    }
+
+    fun copy() = Polynom(data.reversed())
 
     /**
      * Сложение
      */
-    operator fun plus(other: Polynom): Polynom = TODO()
+    operator fun plus(other: Polynom): Polynom {
+        val result = MutableList(max(data.size, other.data.size)) { 0.0 }
+        for (i in result.indices) {
+            if (i in this.data.indices) {
+                result[i] += this.data[i]
+            }
+            if (i in other.data.indices) {
+                result[i] += other.data[i]
+            }
+        }
+        return Polynom(result.reversed())
+    }
 
     /**
      * Смена знака (при всех слагаемых)
      */
-    operator fun unaryMinus(): Polynom = TODO()
+    operator fun unaryMinus(): Polynom = Polynom(data.map { -it }.reversed())
 
     /**
      * Вычитание
      */
-    operator fun minus(other: Polynom): Polynom = TODO()
+    operator fun minus(other: Polynom): Polynom {
+        val result = MutableList(max(data.size, other.data.size)) { 0.0 }
+        for (i in result.indices) {
+            if (i in this.data.indices) {
+                result[i] += this.data[i]
+            }
+            if (i in other.data.indices) {
+                result[i] -= other.data[i]
+            }
+        }
+        return Polynom(result.reversed())
+    }
 
     /**
      * Умножение
      */
-    operator fun times(other: Polynom): Polynom = TODO()
+    operator fun times(other: Polynom): Polynom {
+        val result = MutableList(data.size + other.data.size) { 0.0 }
+        for (i in data.indices) {
+            for (j in other.data.indices) {
+                result[i + j] += data[i] * other.data[j]
+            }
+        }
+        return Polynom(result.reversed())
+    }
 
     /**
      * Деление
@@ -68,20 +120,35 @@ class Polynom(vararg coeffs: Double) {
      *
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
-    operator fun div(other: Polynom): Polynom = TODO()
+    operator fun div(other: Polynom): Polynom {
+        val result = mutableListOf<Double>()
+        var divisible = this.copy()
+        val divider = Polynom(other.data.dropLastWhile { it == 0.0 }.reversed())
+        var i = divisible.data.size - divider.data.size
+        while (i >= 0) {
+            val x = divisible.data[i + divider.data.size - 1] / divider.data.last()
+            result.add(x)
+            val newData = List(i + 1) { 0.0 }.toMutableList()
+            newData[newData.size - 1] = x
+            val poly = Polynom(newData.reversed()) * divider
+            divisible -= poly
+            i--
+        }
+        return Polynom(result)
+    }
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: Polynom): Polynom = TODO()
+    operator fun rem(other: Polynom): Polynom = this - (this / other) * other
 
     /**
      * Сравнение на равенство
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean = other is Polynom && data == other.data
 
     /**
      * Получение хеш-кода
      */
-    override fun hashCode(): Int = TODO()
+    override fun hashCode(): Int = data.hashCode()
 }
