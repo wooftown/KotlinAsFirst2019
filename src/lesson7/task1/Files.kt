@@ -181,7 +181,9 @@ fun top20Words(inputName: String): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     val lowText = File(inputName).readText().toLowerCase()
     val list = lowText.split(Regex("""[^a-zа-яё]+""")).filter { it.isNotEmpty() }.toList()
-    for (i in list.toSet()) map[i] = list.count { it == i }
+    for (i in list.toSet()) {
+        map[i] = list.count { it == i }
+    }
     return map.toList().sortedByDescending { it.second }.take(20).toMap()
 }
 

@@ -269,8 +269,9 @@ fun knightWaveWay(start: Square, end: Square): List<Square> {
         for ((i, j) in map.filter { (_, j) -> j.size == index }) {
             val way = j + i
             for ((dx, dy) in directionOfKnight) {
-                if (Square(dx + i.column, dy + i.row).inside())
+                if (Square(dx + i.column, dy + i.row).inside()) {
                     map.getOrPut(Square(dx + i.column, dy + i.row)) { way }
+                }
                 return map[end] ?: continue
             }
 

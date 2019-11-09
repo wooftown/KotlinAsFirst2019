@@ -24,6 +24,7 @@ interface Matrix<E> {
     operator fun get(row: Int, column: Int): E
 
     operator fun get(cell: Cell): E
+
     fun listColumn(column: Int): List<E> {
         val list = mutableListOf<E>()
         for (row in 0 until height) {

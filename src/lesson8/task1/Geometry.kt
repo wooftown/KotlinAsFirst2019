@@ -120,6 +120,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
+        if (angle == other.angle) {
+            throw ArithmeticException("parallel lines have no intersection point")
+        }
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
         return Point(x, y)
@@ -219,13 +222,20 @@ fun minContainingCircle(vararg points: Point): Circle {
     val diameter = diameter(*points)
     val a = diameter.begin
     val b = diameter.end
-    val diameterCirle = circleByDiameter(diameter)
+    val diameterCircle = circleByDiameter(diameter)
     val c =
         points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(b.distance(a)) }
     return if (sqr(c!!.distance(a)) + sqr(c.distance(b)) - sqr(b.distance(a)) > 0) {
         circleByThreePoints(a, b, c)
     } else
-        diameterCirle
+        diameterCircle
 }
 
-
+fun main(){
+   /* Line(Point(0.0, 0.0), 0.0).crossPoint(
+        Line(
+            Point(1.0, 1.0),
+            0.0
+        )
+    )*/
+}

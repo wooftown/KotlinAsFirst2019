@@ -1,11 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 
 package lesson9.task2
-
-import lesson9.task1.Cell
-import lesson9.task1.Matrix
-import lesson9.task1.MatrixImpl
-import lesson9.task1.createMatrix
+import lesson9.task1.*
 import java.util.*
 import kotlin.math.abs
 
@@ -290,17 +286,7 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  *
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
-/*
-fun leftUpSum(matrix: Matrix<Int>, row: Int, column: Int): Int {
-    var sum = 0
-    for (i in 0..row) {
-        for (j in 0..column) {
-            sum += matrix[i, j]
-        }
-    }
-    return sum
-}
-*/
+
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
     val result = createMatrix(matrix.height, matrix.width, 0)
     for (row in 0 until matrix.height) {
@@ -316,7 +302,6 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
     }
     return result
 }
-
 
 /**
  * Сложная

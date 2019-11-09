@@ -152,6 +152,14 @@ class Tests {
     @Test
     @Tag("Normal")
     fun crossPoint() {
+        assertThrows(ArithmeticException::class.java) {
+            Line(Point(0.0, 0.0), 0.0).crossPoint(
+                Line(
+                    Point(1.0, 1.0),
+                    0.0
+                )
+            )
+        }
         assertTrue(
             Point(2.0, 3.0).distance(
                 Line(Point(2.0, 0.0), PI / 2).crossPoint(
