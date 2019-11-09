@@ -4,6 +4,10 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 
+/**
+Почти все тесты были неправильными , поправил =)
+ */
+
 internal class ComplexTest {
 
     private fun assertApproxEquals(expected: Complex, actual: Complex, eps: Double) {
