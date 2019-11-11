@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 
 package lesson9.task2
+
 import lesson9.task1.*
 import java.util.*
 import kotlin.math.abs
@@ -494,10 +495,9 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 
 fun main() {
     val matrix = createMatrix(4, 4, 0)
-    matrix[3, 3] = 0
-    matrix[0, 0] = 1
-    //for (i in 2..15) {
-    //  }
+    for (i in 1..15) {
+        matrix[(i - 1) / 4, (i - 1) % 4] = i
+    }
     println(matrix)
 }
 
