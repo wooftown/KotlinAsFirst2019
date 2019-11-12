@@ -554,7 +554,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
     while (queue.isNotEmpty()) {
         val nextFifteen = queue.poll()
-        println(k++)
         for (hop in nextFifteen.findNear()) {
             val nextGround = nextFifteen.ground.copy()
             nextGround[nextFifteen.cell] = nextGround[hop]

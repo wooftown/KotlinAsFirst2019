@@ -120,12 +120,11 @@ fun sibilants(inputName: String, outputName: String) {
 fun centerFile(inputName: String, outputName: String) {
     val lines = File(inputName).readLines().map { it.trim() }
     val max = lines.map { it.length }.max() ?: 0
-    File(outputName).bufferedWriter().use {
-        for (line in lines) {
-            it.write(" ".repeat((max - line.length) / 2) + line)
-            it.newLine()
-        }
+    val output = File(outputName).bufferedWriter()
+    lines.forEach {
+        output.write(" ".repeat((max - it.length) / 2) + it + "\n")
     }
+    output.close()
 }
 
 /**
@@ -335,7 +334,7 @@ fun tagWriteListChange(list: ArrayDeque<String>, tag: String): String {
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines().toMutableList()
     val output = File(outputName).bufferedWriter()
-    val list = ArrayDeque<String>()
+    val queue = ArrayDeque<String>()
     output.write("<html><body><p>")
     while (text.isNotEmpty() && text.first() == "") {
         text.removeAt(0)
@@ -354,20 +353,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             when (tagFindHelper(line, ind)) {
                 "s" -> {
-                    output.write(tagWriteListChange(list, "s"))
+                    output.write(tagWriteListChange(queue, "s"))
                     ind++
                 }
                 "b" -> {
-                    if ("i" in list && "b" in list && list.indexOf("b") < list.indexOf("i")) {
-                        output.write(tagWriteListChange(list, "i") + tagWriteListChange(list, "b"))
+                    if ("i" in queue && "b" in queue && queue.indexOf("b") < queue.indexOf("i")) {
+                        output.write(tagWriteListChange(queue, "i") + tagWriteListChange(queue, "b"))
                         ind += 2
                     } else {
                         ind++
-                        output.write(tagWriteListChange(list, "b"))
+                        output.write(tagWriteListChange(queue, "b"))
                     }
                 }
                 "i" -> {
-                    output.write(tagWriteListChange(list, "i"))
+                    output.write(tagWriteListChange(queue, "i"))
                 }
                 null -> {
                     output.write(line[ind].toString())
@@ -525,7 +524,8 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 
-fun numberLength(x: Int): Int = x.toString().length
+fun numberLength(x: Int?): Int = x?.toString()?.length ?: 0
+// 11.11 patch
 
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x

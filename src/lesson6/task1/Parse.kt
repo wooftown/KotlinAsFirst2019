@@ -204,16 +204,7 @@ fun bestLongJump(jumps: String): Int {
     if (!jumps.matches(Regex("""((\d+|[-%]) )*(\d+|[-%])"""))) {
         return -1
     }
-    val parts = jumps.split(' ')
-    var result = -1
-    for (i in parts) {
-        val next = i.toIntOrNull()
-        if ((next != null) && (next > result)) {
-            result = next
-        }
-    }
-    return result
-
+    return Regex("""\d+""").findAll(jumps).map { it.value.toInt() }.max() ?: -1
 }
 
 /**
@@ -240,7 +231,6 @@ fun bestHighJump(jumps: String): Int {
     }
     return -1
 }
-
 /**
  * Сложная
  *
@@ -435,22 +425,22 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     }
     require(bracket == 0)
     val cell = MutableList(cells) { 0 }
-    var pos = cells / 2
+    var position = cells / 2
     var commandsPassed = 0
     var commandNow = 0
     val lastBrackets = mutableListOf<Int>()
     while ((commandsPassed < limit) && (commandNow < commands.length)) {
-        check(pos in 0 until cells)
+        check(position in 0 until cells)
         when (commands[commandNow]) {
-            '+' -> cell[pos]++
-            '-' -> cell[pos]--
-            '>' -> pos++
-            '<' -> pos--
-            '[' -> if (cell[pos] == 0) commandNow = closedBracket(commandNow, commands)
+            '+' -> cell[position]++
+            '-' -> cell[position]--
+            '>' -> position++
+            '<' -> position--
+            '[' -> if (cell[position] == 0) commandNow = closedBracket(commandNow, commands)
             else
                 lastBrackets.add(commandNow)
 
-            ']' -> if (cell[pos] != 0)
+            ']' -> if (cell[position] != 0)
                 commandNow = lastBrackets.last()
             else
                 lastBrackets.remove(lastBrackets.last())
@@ -459,6 +449,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         commandNow++
         commandsPassed++
     }
-    check(pos in 0 until cells)
+    check(position in 0 until cells)
     return cell
 }

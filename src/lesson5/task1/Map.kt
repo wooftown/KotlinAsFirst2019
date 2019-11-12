@@ -195,9 +195,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val map2 = mutableMapOf<String, Int>()
     for ((i, j) in stockPrices) {
         map[i] = (map[i] ?: 0.0) + j
-
         map2[i] = (map2[i] ?: 0) + 1
-
     }
     for (i in map.keys) {
         map[i] = map[i]!! / map2[i]!!
@@ -302,7 +300,25 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, Set<String>>()
+    for (name in friends.values) {
+        name.forEach { result[it] = emptySet() }
+    }
+    for (name in friends.keys) {
+        result[name] = emptySet()
+    }
+    for ((name, friend) in friends) {
+        val set = mutableSetOf<String>()
+        for (who in friend) {
+            set.add(who)
+            (friends[who] ?: continue).forEach { set.add(it) }
+        }
+        set.remove(name)
+        result[name] = set
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -352,7 +368,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-// понял что тут нужен не жадный алгоритм
 
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val map = mutableMapOf<Int, Pair<Set<String>, Int>>()
