@@ -310,9 +310,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         }
     }
     for ((name, friend) in friends) {
-        val set = mutableSetOf<String>()
+        val set = friend.toMutableSet()
         for (who in friend) {
-            set.add(who)
             (result[who] ?: continue).forEach { set.add(it) }
         }
         set.remove(name)
