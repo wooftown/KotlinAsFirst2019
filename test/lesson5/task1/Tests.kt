@@ -194,7 +194,7 @@ class Tests {
     @Tag("Normal")
     fun averageStockPrice() {
         assertEquals(
-           mapOf<String, Double>(),
+            mapOf<String, Double>(),
             averageStockPrice(listOf())
         )
         assertEquals(
@@ -268,6 +268,21 @@ class Tests {
     fun propagateHandshakes() {
         assertEquals(
             mapOf(
+                "135" to setOf("1c9", "33"),
+                "1c9" to setOf("33"),
+                "117" to setOf("135", "33", "1c9"),
+                "33" to setOf()
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "135" to setOf("1c9"),
+                    "1c9" to setOf("33"),
+                    "117" to setOf("135")
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
                 "Sveta" to setOf("Mikhail"),
                 "Mikhail" to setOf()
@@ -325,7 +340,7 @@ class Tests {
         assertEquals(
             setOf("1"),
             bagPacking(
-                mapOf("0" to (1 to 1),"1" to (1 to 2)),
+                mapOf("0" to (1 to 1), "1" to (1 to 2)),
                 1
             )
         )
