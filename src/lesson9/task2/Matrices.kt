@@ -531,14 +531,14 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell) {
     val f: Int
 
     init {
-        var s = 0
+        var heuristics = 0
         for (i in 0..3) {
             for (j in 0..3) {
-                s += if (ground[j, i] == 0) abs(i - 3) + abs(j - 3)
+                heuristics += if (ground[j, i] == 0) abs(i - 3) + abs(j - 3)
                 else abs((ground[j, i] - 1) % 4 - i) + abs(ground[j, i] / 4 - j)
             }
         }
-        f = s
+        f = heuristics
     }
 
     fun findNear(): List<Cell> {
