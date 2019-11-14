@@ -494,11 +494,37 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 
 
 fun main() {
-    val matrix = createMatrix(4, 4, 0)
+    val funMatrix = createMatrix(4, 4, 0)
     for (i in 1..15) {
-        matrix[(i - 1) / 4, (i - 1) % 4] = i
+        funMatrix[(i - 1) / 4, (i - 1) % 4] = i
     }
-    println(matrix)
+    val newMat = createMatrix(4, 4, 0)
+    val newMatS = createMatrix(4, 4, 0)
+    val newMatT = createMatrix(4, 4, 0)
+    val newMatF = createMatrix(4, 4, 0)
+    val newMatFv = createMatrix(4, 4, 0)
+    for (i in 0..3) {
+        for (j in 0..3) {
+            if (funMatrix[i, j] != 0) {
+                val k = (funMatrix[j, i] - 1) % 4
+                val m = funMatrix[j, i] / 4
+                val ks = (funMatrix[i, j] - 1) / 4
+                val ms = (funMatrix[i, j] - 1) % 4
+                val kt = (funMatrix[i, j] - 1) % 4
+                val mt = funMatrix[i, j] / 4
+                val kf = (funMatrix[j, i] - 1) / 4
+                val mf = (funMatrix[j, i] - 1) % 4
+                val kfv = (funMatrix[i, j] - 1) % 4
+                val mfv = (funMatrix[i, j] - 1) / 4
+                newMat[k, m] = funMatrix[i, j]
+                newMatS[ks, ms] = funMatrix[i, j]
+                newMatT[kt, mt] = funMatrix[j, i]
+                newMatF[kf, mf] = funMatrix[j, i]
+                newMatFv[mfv, kfv] = funMatrix[i, j]
+            }
+        }
+    }
+    println(funMatrix)
 }
 
 
@@ -520,11 +546,7 @@ fun findF(funMatrix: Matrix<Int>): Int {
     var f = 0
     for (i in 0..3) {
         for (j in 0..3) {
-            f += if (funMatrix[i, j] != 0) {
-                abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
-            } else {
-                abs(3 - i) + abs(3 - j)
-            }
+            TODO()
         }
 
     }
@@ -535,7 +557,6 @@ fun findF(funMatrix: Matrix<Int>): Int {
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winFirst = createMatrix(4, 4, 0)
     var zero = Cell(0, 0)
-    var k = 0
     for (row in 0..3) {
         for (column in 0..3) {
             if (matrix[row, column] == 0) {
