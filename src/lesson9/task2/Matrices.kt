@@ -490,17 +490,8 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * 15, 12, 11, 10, 9, 13, 14, 15]
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
+ * 1 2 3 4 5 6 7 8 9 10 11 12 0 13 14 15   6==6
  */
-
-
-fun main() {
-    val matrix = createMatrix(4, 4, 0)
-    for (i in 1..15) {
-        matrix[(i - 1) / 4, (i - 1) % 4] = i
-    }
-    println(matrix)
-}
-
 
 class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val f: Int) {
     fun findNear(): List<Cell> {
@@ -526,23 +517,22 @@ fun findF(funMatrix: Matrix<Int>): Int {
                 abs(3 - i) + abs(3 - j)
             }
         }
-
     }
     return f
 }
-
-
+/**----------------------------------------------------------------------------------------*/
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winFirst = createMatrix(4, 4, 0)
     var zero = Cell(0, 0)
-    var k = 0
+    for (i in 1..15) {
+        winFirst[(i - 1) / 4, (i - 1) % 4] = i
+    }
     for (row in 0..3) {
         for (column in 0..3) {
             if (matrix[row, column] == 0) {
                 zero = Cell(row, column)
-                continue
+                break
             }
-            winFirst[row, column] = row * 4 + column + 1
         }
     }
     val winSecond = winFirst.copy()
@@ -568,4 +558,6 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     }
     return listOf()
 }
+
+
 
