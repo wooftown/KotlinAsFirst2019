@@ -494,53 +494,15 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 
 
 fun main() {
-    val funMatrix = createMatrix(4, 4, 0)
+    val matrix = createMatrix(4, 4, 0)
     for (i in 1..15) {
-        funMatrix[(i - 1) / 4, (i - 1) % 4] = i
+        matrix[(i - 1) / 4, (i - 1) % 4] = i
     }
-    val newMat = createMatrix(4, 4, 0)
-    val newMatS = createMatrix(4, 4, 0)
-    val newMatT = createMatrix(4, 4, 0)
-    val newMatF = createMatrix(4, 4, 0)
-    val newMatFv = createMatrix(4, 4, 0)
-    for (i in 0..3) {
-        for (j in 0..3) {
-            if (funMatrix[i, j] != 0) {
-                val k = funMatrix[i, j] / 4 //////
-                val m = (funMatrix[i, j] - 1) % 4 /// /////////////
-                val ks = (funMatrix[i, j] - 1) / 4
-                val ms = (funMatrix[i, j] - 1) % 4
-                val kt = (funMatrix[i, j] - 1) % 4                  /////////////////   fdsfFDSFSFSDFSD
-                val mt = funMatrix[i, j] / 4                       ///////////////fas   FSFfdfsdfSDFSDFSD
-                val kf = (funMatrix[j, i] - 1) / 4
-                val mf = (funMatrix[j, i] - 1) % 4
-                val kfv = (funMatrix[i, j] - 1) % 4
-                val mfv = (funMatrix[i, j] - 1) / 4
-                newMat[k, m] = funMatrix[i, j] // 1, 2, 3, 0, 5, 6, 7, 4, 9, 10, 11, 8, 13, 14, 15, 12
-                newMatS[ks, ms] = funMatrix[i, j] // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0
-                newMatT[kt, mt] = funMatrix[j, i] // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15
-                newMatF[kf, mf] = funMatrix[j, i] // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0
-                newMatFv[mfv, kfv] = funMatrix[i, j] // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0
-            }
-        }
-    }
+    println(matrix)
 }
 
 
-class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell) {
-    val f: Int
-
-    init {
-        var heuristics = 0
-        for (i in 0..3) {
-            for (j in 0..3) {
-                heuristics += if (ground[j, i] == 0) abs(i - 3) + abs(j - 3)
-                else abs((ground[j, i] - 1) % 4 - i) + abs(ground[j, i] / 4 - j)
-            }
-        }
-        f = heuristics
-    }
-
+class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val f: Int) {
     fun findNear(): List<Cell> {
         val list = mutableListOf<Cell>()
         for ((i, j) in fifteenDir) {
@@ -554,19 +516,33 @@ class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell) {
     }
 }
 
+fun findF(funMatrix: Matrix<Int>): Int {
+    var f = 0
+    for (i in 0..3) {
+        for (j in 0..3) {
+            f += if (funMatrix[i, j] != 0) {
+                abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
+            } else {
+                abs(3 - i) + abs(3 - j)
+            }
+        }
+
+    }
+    return f
+}
+
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winFirst = createMatrix(4, 4, 0)
     var zero = Cell(0, 0)
-    for (i in 1..15) {
-        winFirst[(i - 1) / 4, (i - 1) % 4] = i
-    }
+    var k = 0
     for (row in 0..3) {
         for (column in 0..3) {
             if (matrix[row, column] == 0) {
                 zero = Cell(row, column)
-                break
+                continue
             }
+            winFirst[row, column] = row * 4 + column + 1
         }
     }
     val winSecond = winFirst.copy()
@@ -575,7 +551,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     if (matrix == winFirst || matrix == winSecond) return listOf()
     val passedGrounds = mutableSetOf(matrix)
     val queue = PriorityQueue<Fifteen>(compareBy { it.f })
-    queue.add(Fifteen(matrix, listOf(), zero))
+    queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
     while (queue.isNotEmpty()) {
         val nextFifteen = queue.poll()
         for (hop in nextFifteen.findNear()) {
@@ -587,8 +563,9 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
             if (nextGround == winFirst || nextGround == winSecond) return nextHops
             if (nextGround in passedGrounds) continue
             passedGrounds.add(nextGround)
-            queue.add(Fifteen(nextGround, nextHops, hop))
+            queue.add(Fifteen(nextGround, nextHops, hop, findF(nextGround)))
         }
     }
     return listOf()
 }
+
