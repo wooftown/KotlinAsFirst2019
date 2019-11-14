@@ -399,13 +399,7 @@ class Tests {
         createMatrix(
             4, 4, listOf(
                 listOf(1, 2, 3, 4), listOf(5, 6, 7, 8),
-                listOf(9, 10, 11, 12), listOf(13, 14, 15, 0)
-            )
-        ).assertSolution()
-        createMatrix(
-            4, 4, listOf(
-                listOf(1, 2, 3, 4), listOf(5, 6, 7, 8),
-                listOf(9, 10, 15, 11), listOf(13, 14, 12, 0)
+                listOf(10, 11, 12, 0), listOf(9, 13, 14, 15)
             )
         ).assertSolution()
         createMatrix(
