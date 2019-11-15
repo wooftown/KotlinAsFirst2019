@@ -520,7 +520,7 @@ fun findF(funMatrix: Matrix<Int>): Int {
     }
     return f
 }
-/**----------------------------------------------------------------------------------------*/
+
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winFirst = createMatrix(4, 4, 0)
     var zero = Cell(0, 0)
