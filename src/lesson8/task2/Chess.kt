@@ -2,6 +2,7 @@
 
 package lesson8.task2
 
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -236,7 +237,7 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2, -1 to -2, -2 to 1, -2 to -1)
 
-fun knightWaveWay(start: Square, end: Square): List<Square> {
+/*fun knightWaveWay(start: Square, end: Square): List<Square> {
     val map = mutableMapOf<Square, List<Square>>()
     map[start] = listOf()
     var index = 0
@@ -254,6 +255,25 @@ fun knightWaveWay(start: Square, end: Square): List<Square> {
         index++
     }
 }
+*/
+
+fun knightWaySolver(start: Square, end: Square): List<Square> {
+    if (start == end) return listOf()
+    val queue = ArrayDeque<Pair<Square, List<Square>>>()
+    queue.add(start to listOf())
+    while (true) {
+        val (square, hop) = queue.poll()
+        if (square == end) return hop
+        for ((dx, dy) in directionOfKnight) {
+            if (Square(dx + square.column, dy + square.row).inside()) {
+                queue.add(Square(dx + square.column, dy + square.row) to hop + square)
+            }
+            if (Square(dx + square.column, dy + square.row) == end) {
+                return hop + square
+            }
+        }
+    }
+}
 
 
 fun knightMoveNumber(start: Square, end: Square): Int {
@@ -261,7 +281,7 @@ fun knightMoveNumber(start: Square, end: Square): Int {
     return if (start == end) {
         0
     } else {
-        knightWaveWay(start, end).size
+        knightWaySolver(start, end).size
     }
 }
 
@@ -285,5 +305,5 @@ fun knightMoveNumber(start: Square, end: Square): Int {
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = knightWaveWay(start, end) + end
+fun knightTrajectory(start: Square, end: Square): List<Square> = knightWaySolver(start, end) + end
 
