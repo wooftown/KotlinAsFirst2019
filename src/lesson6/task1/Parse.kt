@@ -422,16 +422,16 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         } else {
             bracket--
         }
-        require(bracket >= 0) { "Incorrect brackets in commands list" }
+        require(bracket >= 0) { "Incorrect brackets sequence in commands list" }
     }
-    require(bracket == 0) { "Incorrect brackets in commands list" }
+    require(bracket == 0) { "Incorrect brackets sequence in commands list" }
     val cellsList = MutableList(cells) { 0 }
     var position = cells / 2
     var commandsPassed = 0
     var commandNow = 0
     val lastBrackets = mutableListOf<Int>()
     while ((commandsPassed < limit) && (commandNow < commands.length)) {
-        check(position in 0 until cells) { "Tracker went from cells" }
+        check(position in 0 until cells) { "Tracker went out from cells" }
         when (commands[commandNow]) {
             '+' -> cellsList[position]++
             '-' -> cellsList[position]--
@@ -450,6 +450,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         commandNow++
         commandsPassed++
     }
-    check(position in 0 until cells) { "Tracker went from cells" }
+    check(position in 0 until cells) { "Tracker went out from cells" }
     return cellsList
 }
