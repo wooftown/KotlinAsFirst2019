@@ -260,14 +260,17 @@ fun knightWaySolver(start: Square, end: Square): List<Square> {
     if (start == end) return listOf()
     val queue = ArrayDeque<Pair<Square, List<Square>>>()
     queue.add(start to listOf())
+    val passedSquares = mutableListOf(start)
     while (true) {
         val (square, hop) = queue.poll()
         if (square == end) return hop
         for ((dx, dy) in directionOfKnight) {
-            if (Square(dx + square.column, dy + square.row).inside()) {
-                queue.add(Square(dx + square.column, dy + square.row) to hop + square)
+            val newSquare = Square(dx + square.column, dy + square.row)
+            if (newSquare.inside() && newSquare !in passedSquares) {
+                queue.add(newSquare to hop + square)
+                passedSquares.add(newSquare)
             }
-            if (Square(dx + square.column, dy + square.row) == end) {
+            if (newSquare == end) {
                 return hop + square
             }
         }
