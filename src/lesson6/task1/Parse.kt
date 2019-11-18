@@ -231,6 +231,7 @@ fun bestHighJump(jumps: String): Int {
     }
     return -1
 }
+
 /**
  * Сложная
  *
@@ -242,7 +243,7 @@ fun bestHighJump(jumps: String): Int {
  * (\d+ [+-] )*\d+
  */
 fun plusMinus(expression: String): Int {
-    require(expression.matches(Regex("""(\d+ [+-] )*\d+""")))
+    require(expression.matches(Regex("""(\d+ [+-] )*\d+"""))) { "Incorrect expression" }
     val parts = expression.split(' ')
     var res = parts[0].toInt()
     for (x in 1 until parts.size - 1 step 2) {
@@ -266,13 +267,13 @@ fun plusMinus(expression: String): Int {
  */
 fun firstDuplicateIndex(str: String): Int {
     var index = -1
-    var prevWord = ""
-    for (x in str.split(' ')) {
-        if (x.toLowerCase() == prevWord.toLowerCase()) {
+    var previous = ""
+    for (word in str.split(' ')) {
+        if (word.toLowerCase() == previous.toLowerCase()) {
             return index
         }
-        index += prevWord.length
-        prevWord = x
+        index += previous.length
+        previous = word
         index++
     }
     return -1
@@ -413,7 +414,7 @@ fun closedBracket(beginning: Int, commands: String): Int {
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    require(commands.matches(Regex("""[ +-<>\[\]]+|^$""")))
+    require(commands.matches(Regex("""[ +-<>\[\]]+|^$"""))) { "Incorrect commands" }
     var bracket = 0
     for (i in commands.filter { it in "[]" }) {
         if (i == '[') {
@@ -421,26 +422,26 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         } else {
             bracket--
         }
-        require(bracket >= 0)
+        require(bracket >= 0) { "Incorrect brackets in commands list" }
     }
-    require(bracket == 0)
-    val cell = MutableList(cells) { 0 }
+    require(bracket == 0) { "Incorrect brackets in commands list" }
+    val cellsList = MutableList(cells) { 0 }
     var position = cells / 2
     var commandsPassed = 0
     var commandNow = 0
     val lastBrackets = mutableListOf<Int>()
     while ((commandsPassed < limit) && (commandNow < commands.length)) {
-        check(position in 0 until cells)
+        check(position in 0 until cells) { "Tracker went from cells" }
         when (commands[commandNow]) {
-            '+' -> cell[position]++
-            '-' -> cell[position]--
+            '+' -> cellsList[position]++
+            '-' -> cellsList[position]--
             '>' -> position++
             '<' -> position--
-            '[' -> if (cell[position] == 0) commandNow = closedBracket(commandNow, commands)
+            '[' -> if (cellsList[position] == 0) commandNow = closedBracket(commandNow, commands)
             else
                 lastBrackets.add(commandNow)
 
-            ']' -> if (cell[position] != 0)
+            ']' -> if (cellsList[position] != 0)
                 commandNow = lastBrackets.last()
             else
                 lastBrackets.remove(lastBrackets.last())
@@ -449,6 +450,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         commandNow++
         commandsPassed++
     }
-    check(position in 0 until cells)
-    return cell
+    check(position in 0 until cells) { "Tracker went from cells" }
+    return cellsList
 }

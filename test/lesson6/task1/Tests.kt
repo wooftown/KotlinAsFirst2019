@@ -135,7 +135,6 @@ class Tests {
     @Tag("Impossible")
     fun computeDeviceCells() {
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(1, ">", 500) }
-       // assertEquals(listOf(0, 0, 0, 0), computeDeviceCells(4, "+-[++]", 500))
         assertEquals(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), computeDeviceCells(10, "", 500))
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 1, 1, 1), computeDeviceCells(10, "+>+>+>+>+", 10000))
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 1, 1, 1), computeDeviceCells(10, "+>+>+>+>+", 10000))
