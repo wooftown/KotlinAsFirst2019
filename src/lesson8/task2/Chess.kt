@@ -250,7 +250,6 @@ private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2
                 }
                 return map[end] ?: continue
             }
-
         }
         index++
     }
@@ -278,11 +277,7 @@ fun knightWaySolver(start: Square, end: Square): List<Square> {
 
 fun knightMoveNumber(start: Square, end: Square): Int {
     require(start.inside() && end.inside()) { "Incorrect square pair: $start $end" }
-    return if (start == end) {
-        0
-    } else {
-        knightWaySolver(start, end).size
-    }
+    return knightWaySolver(start, end).size
 }
 
 /**
