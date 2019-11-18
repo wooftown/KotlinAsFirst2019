@@ -202,6 +202,7 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
     val center = if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
         diameter(a, b, c).midPoint()
+        // на случай того , если они все лежат на одной прямой. В моём кроспоинте выдаёт исключение по этому поводу , поэтому сделал так
     } else {
         bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
     }
