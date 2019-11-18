@@ -198,16 +198,13 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * Центр описанной окружности лежит на пересечении серединных перпендикуляров к сторонам треугольника
  * r = abc/4s
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-    val center = if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
-        diameter(a, b, c).midPoint()
-        // на случай того , если они все лежат на одной прямой. В моём кроспоинте выдаёт исключение по этому поводу , поэтому сделал так
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle =
+    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
+        circleByDiameter(diameter(a, b, c))
     } else {
-        bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
+        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
     }
-    return Circle(center, radius)
-}
 
 /**
  * Дано множество точек на плоскости. Найти круг минимального радиуса,
