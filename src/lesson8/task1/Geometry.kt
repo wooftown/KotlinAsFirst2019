@@ -198,13 +198,10 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * Центр описанной окружности лежит на пересечении серединных перпендикуляров к сторонам треугольника
  * r = abc/4s
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle =
-    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
-        circleByDiameter(diameter(a, b, c))
-    } else {
-        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
-    }
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+    return Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+}
 
 /**
  * Дано множество точек на плоскости. Найти круг минимального радиуса,
@@ -227,8 +224,16 @@ fun minContainingCircle(vararg points: Point): Circle {
     var resultCircle = circleByDiameter(diameter)
     for (point in points.filter { it != a && it != b }) {
         if (!resultCircle.contains(point)) {
-            resultCircle = circleByThreePoints(a, b, point)
+            resultCircle = circleWithThreePoints(a, b, point)
         }
     }
     return resultCircle
 }
+
+fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
+    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
+        circleByDiameter(diameter(a, b, c))
+    } else {
+        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+    }
