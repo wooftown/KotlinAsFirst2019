@@ -173,8 +173,8 @@ fun bisectorByPoints(a: Point, b: Point): Line {
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
     val list = circles.toSet().toList()
     require(list.size > 1)
-    var min = Double.POSITIVE_INFINITY
-    var res = list[0] to list[0]
+    var min = list[0].distance(list[1])
+    var res = list[0] to list[1]
     for (i in list.indices) {
         for (j in i + 1 until list.size) {
             val dist = list[i].distance(list[j])
@@ -200,7 +200,8 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-    return Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
+    return Circle(center, radius)
 }
 
 /**
@@ -218,14 +219,14 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty())
     if (points.size == 1) return Circle(points.first(), 0.0)
-    if (points.size == 2) return circleByDiameter(diameter(*points))
     val diameter = diameter(*points)
     val a = diameter.begin
     val b = diameter.end
-    val c =
-        points.filter { it != a && it != b }.maxBy { sqr(it.distance(a)) + sqr(it.distance(b)) - sqr(b.distance(a)) }
-    return if (sqr(c!!.distance(a)) + sqr(c.distance(b)) - sqr(b.distance(a)) > 0) {
-        circleByThreePoints(a, b, c)
-    } else
-        circleByDiameter(diameter)
+    var resultCircle = circleByDiameter(diameter)
+    for (point in points.filter { it != a && it != b }) {
+        if (!resultCircle.contains(point)) {
+            resultCircle = circleByThreePoints(a, b, point)
+        }
+    }
+    return resultCircle
 }

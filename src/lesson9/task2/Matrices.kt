@@ -493,70 +493,9 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * 1 2 3 4 5 6 7 8 9 10 11 12 0 13 14 15   6==6
  */
 
-class Fifteen(val ground: Matrix<Int>, val hops: List<Int>, val cell: Cell, val f: Int) {
-    fun findNear(): List<Cell> {
-        val list = mutableListOf<Cell>()
-        for ((i, j) in fifteenDir) {
-            val row = cell.row + j
-            val column = cell.column + i
-            if ((column in 0..3) && (row in 0..3)) {
-                list.add(Cell(row, column))
-            }
-        }
-        return list
-    }
-}
-
-fun findF(funMatrix: Matrix<Int>): Int {
-    var f = 0
-    for (i in 0..3) {
-        for (j in 0..3) {
-            f += if (funMatrix[i, j] != 0) {
-                abs((funMatrix[i, j] - 1) / 4 - i) + abs((funMatrix[i, j] - 1) % 4 - j)
-            } else {
-                abs(3 - i) + abs(3 - j)
-            }
-        }
-    }
-    return f
-}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    val winFirst = createMatrix(4, 4, 0)
-    var zero = Cell(0, 0)
-    for (i in 1..15) {
-        winFirst[(i - 1) / 4, (i - 1) % 4] = i
-    }
-    for (row in 0..3) {
-        for (column in 0..3) {
-            if (matrix[row, column] == 0) {
-                zero = Cell(row, column)
-                break
-            }
-        }
-    }
-    val winSecond = winFirst.copy()
-    winSecond[3, 2] = 14
-    winSecond[3, 1] = 15
-    if (matrix == winFirst || matrix == winSecond) return listOf()
-    val passedGrounds = mutableSetOf(matrix)
-    val queue = PriorityQueue<Fifteen>(compareBy { it.f })
-    queue.add(Fifteen(matrix, listOf(), zero, findF(matrix)))
-    while (queue.isNotEmpty()) {
-        val nextFifteen = queue.poll()
-        for (hop in nextFifteen.findNear()) {
-            val nextGround = nextFifteen.ground.copy()
-            nextGround[nextFifteen.cell] = nextGround[hop]
-            nextGround[hop] = 0
-            val nextHops = nextFifteen.hops.toMutableList()
-            nextHops.add(nextGround[nextFifteen.cell])
-            if (nextGround == winFirst || nextGround == winSecond) return nextHops
-            if (nextGround in passedGrounds) continue
-            passedGrounds.add(nextGround)
-            queue.add(Fifteen(nextGround, nextHops, hop, findF(nextGround)))
-        }
-    }
-    return listOf()
+    TODO()
 }
 
 
