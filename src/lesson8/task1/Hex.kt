@@ -157,7 +157,7 @@ enum class Direction {
      * При решении этой задачи попробуйте обойтись без перечисления всех семи вариантов.
      */
     fun next(): Direction {
-        require(this != INCORRECT)
+        require(this != INCORRECT) { "Incorrect cannot be input data" }
         return values()[(ordinal + 1) % 6]
     }
 
@@ -197,11 +197,11 @@ INCORRECT;  // отрезок имеет изгиб, например 30 -> 55 (
 fun HexPoint.move(direction: Direction, distance: Int): HexPoint = when (direction) {
     Direction.RIGHT -> HexPoint(x + distance, y)
     Direction.UP_RIGHT -> HexPoint(x, y + distance)
-    Direction.UP_LEFT -> HexPoint(x - distance, y + distance) //
+    Direction.UP_LEFT -> HexPoint(x - distance, y + distance)
     Direction.LEFT -> HexPoint(x - distance, y)
     Direction.DOWN_LEFT -> HexPoint(x, y - distance)
-    Direction.DOWN_RIGHT -> HexPoint(x + distance, y - distance) //
-    else -> throw IllegalArgumentException()
+    Direction.DOWN_RIGHT -> HexPoint(x + distance, y - distance)
+    else -> throw IllegalArgumentException("Incorrect move direction")
 }
 
 

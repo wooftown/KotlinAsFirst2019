@@ -58,17 +58,17 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val text = File(inputName).readText().toLowerCase()
-    val res = mutableMapOf<String, Int>()
+    val resultMap = mutableMapOf<String, Int>()
     for (key in substrings) {
-        val lowKey = key.toLowerCase()
-        var index = text.indexOf(lowKey, 0)
-        res[key] = 0
+        val lowerKey = key.toLowerCase()
+        var index = text.indexOf(lowerKey, 0)
+        resultMap[key] = 0
         while (index != -1) {
-            index = text.indexOf(lowKey, index + 1)
-            res[key] = res[key]!! + 1
+            resultMap[key] = resultMap[key]!! + 1
+            index = text.indexOf(lowerKey, index + 1)
         }
     }
-    return res
+    return resultMap
 }
 
 
@@ -86,16 +86,16 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val map = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
-    var prevChar = ' '
+    val ruleMap = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
+    var previous = ' '
     File(outputName).bufferedWriter().use {
-        for (i in File(inputName).readText()) {
-            if ((i in map.keys) && (prevChar in "ЖжЧчШшЩщ")) {
-                it.write(map[i].toString())
+        for (ch in File(inputName).readText()) {
+            if ((ch in ruleMap.keys) && (previous in "ЖжЧчШшЩщ")) {
+                it.write(ruleMap[ch].toString())
             } else {
-                it.write(i.toString())
+                it.write(ch.toString())
             }
-            prevChar = i
+            previous = ch
         }
     }
 }
@@ -119,10 +119,10 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val lines = File(inputName).readLines().map { it.trim() }
-    val max = lines.map { it.length }.max() ?: 0
+    val maxLength = lines.map { it.length }.max() ?: 0
     val output = File(outputName).bufferedWriter()
     lines.forEach {
-        output.write(" ".repeat((max - it.length) / 2) + it + "\n")
+        output.write(" ".repeat((maxLength - it.length) / 2) + it + "\n")
     }
     output.close()
 }
@@ -177,13 +177,14 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  *
  */
 fun top20Words(inputName: String): Map<String, Int> {
-    val map = mutableMapOf<String, Int>()
+    val resultMap = mutableMapOf<String, Int>()
     val lowText = File(inputName).readText().toLowerCase()
-    val list = lowText.split(Regex("""[^a-zа-яё]+""")).filter { it.isNotEmpty() }.toList()
-    for (i in list.toSet()) {
-        map[i] = list.count { it == i }
+    val wordList = Regex("""[а-яa-zё]+""").findAll(lowText).toList().map { it.value }
+    for (word in wordList) {
+        //map[word] = list.count { it == word } - ну очень долго работает
+        resultMap[word] = (resultMap[word] ?: 0) + 1
     }
-    return map.toList().sortedByDescending { it.second }.take(20).toMap()
+    return resultMap.toList().sortedByDescending { it.second }.take(20).toMap()
 }
 
 /**
@@ -221,24 +222,24 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    val lowMap = mutableMapOf<Char, String>()
-    dictionary.forEach { (k, v) -> lowMap[k.toLowerCase()] = v.toLowerCase() }
-    File(outputName).bufferedWriter().use {
-        for (char in File(inputName).readText()) {
-            val curChar = char.toLowerCase()
-            if (curChar in lowMap.keys) {
-                if (lowMap[curChar]!!.isNotEmpty()) {
-                    if (char.isUpperCase()) {
-                        it.write(lowMap[curChar]!!.capitalize())
-                    } else {
-                        it.write(lowMap[curChar]!!)
-                    }
+    val lowDictionary = mutableMapOf<Char, String>()
+    dictionary.forEach { (k, v) -> lowDictionary[k.toLowerCase()] = v.toLowerCase() }
+    val output = File(outputName).bufferedWriter()
+    for (char in File(inputName).readText()) {
+        val current = char.toLowerCase()
+        if (current in lowDictionary.keys) {
+            if (lowDictionary[current]!!.isNotEmpty()) {
+                if (char.isUpperCase()) {
+                    output.write(lowDictionary[current]!!.capitalize())
+                } else {
+                    output.write(lowDictionary[current]!!)
                 }
-            } else {
-                it.write(char.toString())
             }
+        } else {
+            output.write(char.toString())
         }
     }
+    output.close()
 }
 
 /**
@@ -525,7 +526,6 @@ fun markdownToHtml(inputName: String, outputName: String) {
  */
 
 fun numberLength(x: Int?): Int = x?.toString()?.length ?: 0
-// 11.11 patch
 
 fun multiplicationList(x: Int, lhv: Int): List<Int> {
     var i = x
@@ -624,6 +624,7 @@ fun divisionList(x: Int, y: Int): List<Pair<Int, Int>> {
     }
     return list
 }
+
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val list = divisionList(lhv, rhv)

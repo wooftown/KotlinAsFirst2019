@@ -82,17 +82,17 @@ data class Segment(val begin: Point, val end: Point) {
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
 fun diameter(vararg points: Point): Segment {
-    val pts = points.toSet().toList()
-    require(pts.size > 1)
-    var max = pts[0] to pts[0]
-    for (i in pts.indices) {
-        for (j in i + 1 until pts.size) {
-            if (pts[i].distance(pts[j]) > max.first.distance(max.second)) {
-                max = pts[i] to pts[j]
+    val pointsList = points.toSet().toList()
+    require(pointsList.size > 1)
+    var maxPair = pointsList[0] to pointsList[0]
+    for (i in pointsList.indices) {
+        for (j in i + 1 until pointsList.size) {
+            if (pointsList[i].distance(pointsList[j]) > maxPair.first.distance(maxPair.second)) {
+                maxPair = pointsList[i] to pointsList[j]
             }
         }
     }
-    return Segment(max.first, max.second)
+    return Segment(maxPair.first, maxPair.second)
 }
 
 /**
@@ -172,20 +172,20 @@ fun bisectorByPoints(a: Point, b: Point): Line {
  */
 fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
     val list = circles.toSet().toList()
-    require(list.size > 1)
-    var min = list[0].distance(list[1])
-    var res = list[0] to list[1]
+    require(list.size > 1) { "not enough points" }
+    var minDistance = list[0].distance(list[1])
+    var circlePair = list[0] to list[1]
     for (i in list.indices) {
         for (j in i + 1 until list.size) {
-            val dist = list[i].distance(list[j])
-            if (dist < min) {
-                min = dist
-                res = list[i] to list[j]
+            val distance = list[i].distance(list[j])
+            if (distance < minDistance) {
+                minDistance = distance
+                circlePair = list[i] to list[j]
             }
-            if (min == 0.0) return res
+            if (minDistance == 0.0) return circlePair
         }
     }
-    return res
+    return circlePair
 }
 
 /**
@@ -217,7 +217,7 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 
 
 fun minContainingCircle(vararg points: Point): Circle {
-    require(points.isNotEmpty())
+    require(points.isNotEmpty()) { "at least one point is required" }
     if (points.size == 1) return Circle(points.first(), 0.0)
     val diameter = diameter(*points)
     val a = diameter.begin

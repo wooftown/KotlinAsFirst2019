@@ -3,11 +3,8 @@
 package lesson9.task2
 
 import lesson9.task1.*
-import java.util.*
 import kotlin.math.abs
 
-
-// Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
 /**
  * Пример
@@ -39,7 +36,7 @@ fun <E> transpose(matrix: Matrix<E>): Matrix<E> {
  * При сложении попарно складываются соответствующие элементы матриц
  */
 operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
-    require(!(width != other.width || height != other.height))
+    require(!(width != other.width || height != other.height)) {"matrices must be of the same size"}
     if (width < 1 || height < 1) return this
     val result = this.copy()
     for (i in 0 until height) {

@@ -56,7 +56,8 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = MatrixImpl(heig
 
 class MatrixImpl<E>(override val height: Int, override val width: Int, default: E) : Matrix<E> {
     init {
-        require(height > 0 && width > 0)
+        require(height > 0) { "Incorrect height = $height" }
+        require(width > 0) { "Incorrect width = $width" }
     }
 
     private val info = List(height) { MutableList(width) { default } }

@@ -41,7 +41,7 @@ data class Square(val column: Int, val row: Int) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square {
-    require(notation.matches(Regex("""[a-h][1-8]""")))
+    require(notation.matches(Regex("""[a-h][1-8]"""))) { "Incorrect square notation" }
     return Square(notation.first() - 'a' + 1, notation.last() - '0')
 }
 
@@ -70,7 +70,7 @@ fun square(notation: String): Square {
  */
 fun rookMoveNumber(start: Square, end: Square): Int =
     when {
-        !start.inside() || !end.inside() -> throw IllegalArgumentException()
+        !start.inside() || !end.inside() -> throw IllegalArgumentException("Incorrect square")
         end == start -> 0
         start.row == end.row || start.column == end.column -> 1
         else -> 2
@@ -121,7 +121,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = when (rookMoveNum
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
 fun bishopMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside())
+    require(start.inside() && end.inside()) { "Incorrect square pair: $start $end" }
     if (start == end) return 0
     if ((start.column + start.row) % 2 != (end.column + end.row) % 2) return -1
     return if (abs(start.column - end.column) == abs(start.row - end.row)) 1 else 2
@@ -159,15 +159,10 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
         -1 -> listOf()
         0 -> listOf(start)
         1 -> listOf(start, end)
-        else -> if (squareFirst.inside()
-        ) {
-            listOf(
-                start, squareFirst, end
-            )
+        else -> if (squareFirst.inside()) {
+            listOf(start, squareFirst, end)
         } else {
-            listOf(
-                start, squareSecond, end
-            )
+            listOf(start, squareSecond, end)
         }
     }
 }
@@ -193,7 +188,7 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
 fun kingMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside())
+    require(start.inside() && end.inside()) { "Incorrect square pair: $start $end" }
     return max(abs(end.column - start.column), abs(end.row - start.row))
 }
 
@@ -241,26 +236,6 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2, -1 to -2, -2 to 1, -2 to -1)
 
-// волновой алгоритм
-/* fun knightWaveWay(start: Square, end: Square): List<Square> {
-    val map = mutableMapOf<Square, List<Square>>()
-    map[start] = listOf()
-    var index = 0
-    while (map[end] == null) {
-        for ((i, j) in map.filter { (_, j) -> j.size == index }) {
-            val way = j + i
-            for ((dx, dy) in directionOfKnight) {
-                if (Square(dx + i.column, dy + i.row).inside())
-                    if (map[Square(dx + i.column, dy + i.row)] == null)
-                        map[Square(dx + i.column, dy + i.row)] = way
-                if (map[end] != null) return map[end]!!
-            }
-        }
-        index++
-    }
-    return map[end]!!
-}
-*/
 fun knightWaveWay(start: Square, end: Square): List<Square> {
     val map = mutableMapOf<Square, List<Square>>()
     map[start] = listOf()
@@ -282,7 +257,7 @@ fun knightWaveWay(start: Square, end: Square): List<Square> {
 
 
 fun knightMoveNumber(start: Square, end: Square): Int {
-    require(start.inside() && end.inside())
+    require(start.inside() && end.inside()) { "Incorrect square pair: $start $end" }
     return if (start == end) {
         0
     } else {
