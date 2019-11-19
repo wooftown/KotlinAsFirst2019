@@ -228,11 +228,19 @@ fun minContainingCircle(vararg points: Point): Circle {
     return circle
 }
 
+fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
+    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
+        circleByDiameter(diameter(a, b, c))
+    } else {
+        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+    }
+
 fun circleWithTwo(points: List<Point>, p1: Point, p2: Point): Circle {
     var circle = circleByDiameter(Segment(p1, p2))
     for (p in points) {
         if (!circle.contains(p)) {
-            circle = circleByThreePoints(p, p1, p2)
+            circle = circleWithThreePoints(p, p1, p2)
         }
     }
     return circle
