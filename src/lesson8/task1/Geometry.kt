@@ -222,7 +222,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     val a = diameter.begin
     val b = diameter.end
     var resultCircle = circleByDiameter(diameter)
-    for (point in points.toSet()) {
+    for (point in points.filter { it != a && it != b }) {
         if (!resultCircle.contains(point)) {
             resultCircle = circleWithThreePoints(a, b, point)
         }
