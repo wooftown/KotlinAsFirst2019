@@ -217,15 +217,17 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty()) { "at least one point is required" }
-    val list = points.toSet().toList()
-    if (list.size == 1) return Circle(list.first(), 0.0)
-    var circle = circleByDiameter(Segment(list[0], list[1]))
-    for (i in 2 until list.size) {
-        if (!circle.contains(list[i])) {
-            circle = circleWithOne(list.slice(0 until i), list[i])
+    if (points.size == 1) return Circle(points.first(), 0.0)
+    val diameter = diameter(*points)
+    val a = diameter.begin
+    val b = diameter.end
+    var resultCircle = circleByDiameter(diameter)
+    for (point in points.filter { it != a && it != b }) {
+        if (!resultCircle.contains(point)) {
+            resultCircle = circleWithThreePoints(a, b, point)
         }
     }
-    return circle
+    return resultCircle
 }
 
 fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
@@ -235,23 +237,3 @@ fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
         val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
         Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
     }
-
-fun circleWithTwo(points: List<Point>, p1: Point, p2: Point): Circle {
-    var circle = circleByDiameter(Segment(p1, p2))
-    for (p in points) {
-        if (!circle.contains(p)) {
-            circle = circleWithThreePoints(p, p1, p2)
-        }
-    }
-    return circle
-}
-
-fun circleWithOne(points: List<Point>, p1: Point): Circle {
-    var circle = circleByDiameter(Segment(points[0], p1))
-    for (i in 1 until points.size) {
-        if (!circle.contains(points[i])) {
-            circle = circleWithTwo(points.slice(0 until i), p1, points[i])
-        }
-    }
-    return circle
-}
