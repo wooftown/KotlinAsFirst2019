@@ -200,7 +200,8 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-    return Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
+    return Circle(center, radius)
 }
 
 /**
@@ -213,27 +214,35 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  * меньший угол
  */
-fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
-    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
-        circleByDiameter(diameter(a, b, c))
-    } else {
-        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
-    }
 
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty()) { "at least one point is required" }
     if (points.size == 1) return Circle(points.first(), 0.0)
-    val diameter = diameter(*points)
-    val a = diameter.begin
-    val b = diameter.end
-    var circle = circleByDiameter(diameter)
-    for (point in points) {
-        if (!circle.contains(point)) {
-            circle = circleWithThreePoints(a, b, point)
+    var circle = circleByDiameter(Segment(points[0], points[1]))
+    for (i in points.indices) {
+        if (!circle.contains(points[i])) {
+            circle = circleWithOne(points.slice(0 until i), points[i])
         }
     }
     return circle
 }
 
+fun circleWithTwo(points: List<Point>, p1: Point, p2: Point): Circle {
+    var circle = circleByDiameter(Segment(p1, p2))
+    for (p in points) {
+        if (!circle.contains(p)) {
+            circle = circleByThreePoints(p, p1, p2)
+        }
+    }
+    return circle
+}
 
+fun circleWithOne(points: List<Point>, p1: Point): Circle {
+    var circle = circleByDiameter(Segment(points[0], p1))
+    for (i in points.indices) {
+        if (!circle.contains(points[i])) {
+            circle = circleWithTwo(points.slice(0 until i), p1, points[i])
+        }
+    }
+    return circle
+}
