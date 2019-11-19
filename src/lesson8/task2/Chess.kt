@@ -263,15 +263,14 @@ fun knightWaySolver(start: Square, end: Square): List<Square> {
     val passedSquares = mutableListOf(start)
     while (true) {
         val (square, hop) = queue.poll()
-        if (square == end) return hop
         for ((dx, dy) in directionOfKnight) {
             val newSquare = Square(dx + square.column, dy + square.row)
+            if (newSquare == end) {
+                return hop + square
+            }
             if (newSquare.inside() && newSquare !in passedSquares) {
                 queue.add(newSquare to hop + square)
                 passedSquares.add(newSquare)
-            }
-            if (newSquare == end) {
-                return hop + square
             }
         }
     }
