@@ -213,7 +213,13 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  * меньший угол
  */
-
+fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
+    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
+        circleByDiameter(diameter(a, b, c))
+    } else {
+        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
+        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
+    }
 
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty()) { "at least one point is required" }
@@ -222,18 +228,12 @@ fun minContainingCircle(vararg points: Point): Circle {
     val a = diameter.begin
     val b = diameter.end
     var circle = circleByDiameter(diameter)
-    for (point in points.filter { it != a && it != b }) {
-        if (circle.radius < point.distance(circle.center)) {
+    for (point in points) {
+        if (!circle.contains(point)) {
             circle = circleWithThreePoints(a, b, point)
         }
     }
     return circle
 }
 
-fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
-    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
-        circleByDiameter(diameter(a, b, c))
-    } else {
-        val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
-        Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
-    }
+
