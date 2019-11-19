@@ -217,11 +217,12 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 
 fun minContainingCircle(vararg points: Point): Circle {
     require(points.isNotEmpty()) { "at least one point is required" }
-    if (points.size == 1) return Circle(points.first(), 0.0)
-    var circle = circleByDiameter(Segment(points[0], points[1]))
-    for (i in points.indices) {
-        if (!circle.contains(points[i])) {
-            circle = circleWithOne(points.slice(0 until i), points[i])
+    val list = points.toSet().toList()
+    if (list.size == 1) return Circle(list.first(), 0.0)
+    var circle = circleByDiameter(Segment(list[0], list[1]))
+    for (i in 2 until list.size) {
+        if (!circle.contains(list[i])) {
+            circle = circleWithOne(list.slice(0 until i), list[i])
         }
     }
     return circle
@@ -239,7 +240,7 @@ fun circleWithTwo(points: List<Point>, p1: Point, p2: Point): Circle {
 
 fun circleWithOne(points: List<Point>, p1: Point): Circle {
     var circle = circleByDiameter(Segment(points[0], p1))
-    for (i in points.indices) {
+    for (i in 1 until points.size) {
         if (!circle.contains(points[i])) {
             circle = circleWithTwo(points.slice(0 until i), p1, points[i])
         }
