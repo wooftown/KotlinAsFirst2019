@@ -105,6 +105,30 @@ class Tests {
                 )
             ), generateRectangles(5, 6)
         )
+        assertEquals(
+            createMatrix(
+                5, 7,
+                listOf(
+                    listOf(1, 1, 1, 1, 1, 1, 1),
+                    listOf(1, 2, 2, 2, 2, 2, 1),
+                    listOf(1, 2, 3, 3, 3, 2, 1),
+                    listOf(1, 2, 2, 2, 2, 2, 1),
+                    listOf(1, 1, 1, 1, 1, 1, 1)
+                )
+            ), generateRectangles(5, 7)
+        )
+        assertEquals(
+            createMatrix(
+                5, 8,
+                listOf(
+                    listOf(1, 1, 1, 1, 1, 1, 1, 1),
+                    listOf(1, 2, 2, 2, 2, 2, 2, 1),
+                    listOf(1, 2, 3, 3, 3, 3, 2, 1),
+                    listOf(1, 2, 2, 2, 2, 2, 2, 1),
+                    listOf(1, 1, 1, 1, 1, 1, 1, 1)
+                )
+            ), generateRectangles(5, 8)
+        )
 
     }
 

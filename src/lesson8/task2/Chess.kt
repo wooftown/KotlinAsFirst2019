@@ -237,25 +237,6 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 private val directionOfKnight = listOf(2 to 1, 2 to -1, 1 to 2, 1 to -2, -1 to 2, -1 to -2, -2 to 1, -2 to -1)
 
-/*fun knightWaveWay(start: Square, end: Square): List<Square> {
-    val map = mutableMapOf<Square, List<Square>>()
-    map[start] = listOf()
-    var index = 0
-    while (true) {
-        for ((i, j) in map.filter { (_, j) -> j.size == index }) {
-            val way = j + i
-            for ((dx, dy) in directionOfKnight) {
-                if (Square(dx + i.column, dy + i.row).inside()) {
-                    map.getOrPut(Square(dx + i.column, dy + i.row)) { way }
-                }
-                return map[end] ?: continue
-            }
-        }
-        index++
-    }
-}
-*/
-
 fun knightWaySolver(start: Square, end: Square): List<Square> {
     if (start == end) return listOf()
     val queue = ArrayDeque<Pair<Square, List<Square>>>()

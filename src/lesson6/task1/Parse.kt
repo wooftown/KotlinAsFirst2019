@@ -425,31 +425,30 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         require(bracket >= 0) { "Incorrect brackets sequence in commands list" }
     }
     require(bracket == 0) { "Incorrect brackets sequence in commands list" }
+    val bracketsMap = mutableMapOf<Int, Int>()
+    for (i in commands.indices) {
+        if (commands[i] == '[') {
+            val now = closedBracket(i, commands)
+            bracketsMap[i] = now
+            bracketsMap[now] = i
+        }
+    }
     val cellsList = MutableList(cells) { 0 }
     var position = cells / 2
     var commandsPassed = 0
     var commandNow = 0
-    val lastBrackets = mutableListOf<Int>()
     while ((commandsPassed < limit) && (commandNow < commands.length)) {
-        check(position in 0 until cells) { "Tracker went out from cells" }
         when (commands[commandNow]) {
             '+' -> cellsList[position]++
             '-' -> cellsList[position]--
             '>' -> position++
             '<' -> position--
-            '[' -> if (cellsList[position] == 0) commandNow = closedBracket(commandNow, commands)
-            else
-                lastBrackets.add(commandNow)
-
-            ']' -> if (cellsList[position] != 0)
-                commandNow = lastBrackets.last()
-            else
-                lastBrackets.remove(lastBrackets.last())
-
+            '[' -> if (cellsList[position] == 0) commandNow = bracketsMap[commandNow]!!
+            ']' -> if (cellsList[position] != 0) commandNow = bracketsMap[commandNow]!!
         }
+        check(position in 0 until cells) { "Tracker went out from cells" }
         commandNow++
         commandsPassed++
     }
-    check(position in 0 until cells) { "Tracker went out from cells" }
     return cellsList
 }

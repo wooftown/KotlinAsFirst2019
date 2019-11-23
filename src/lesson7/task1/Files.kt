@@ -181,7 +181,6 @@ fun top20Words(inputName: String): Map<String, Int> {
     val lowText = File(inputName).readText().toLowerCase()
     val wordList = Regex("""[а-яa-zё]+""").findAll(lowText).toList().map { it.value }
     for (word in wordList) {
-        //map[word] = list.count { it == word } - ну очень долго работает
         resultMap[word] = (resultMap[word] ?: 0) + 1
     }
     return resultMap.toList().sortedByDescending { it.second }.take(20).toMap()

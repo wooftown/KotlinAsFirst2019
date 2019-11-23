@@ -4,6 +4,7 @@ package lesson9.task2
 
 import lesson9.task1.*
 import kotlin.math.abs
+import kotlin.math.max
 
 
 /**
@@ -36,7 +37,7 @@ fun <E> transpose(matrix: Matrix<E>): Matrix<E> {
  * При сложении попарно складываются соответствующие элементы матриц
  */
 operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
-    require(!(width != other.width || height != other.height)) {"matrices must be of the same size"}
+    require(!(width != other.width || height != other.height)) { "matrices must be of the same size" }
     if (width < 1 || height < 1) return this
     val result = this.copy()
     for (i in 0 until height) {
@@ -79,24 +80,15 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  */
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val result = createMatrix(height, width, 0)
-    var rowLeft = 0
-    var columnLeft = 0
-    var rowRight = height - 1
-    var columnRight = width - 1
     var res = 0
-    while ((rowRight - rowLeft >= 0) || (columnRight - columnLeft >= 0)) {
+    while (res != max(height, width)) {
         res++
-        for (row in rowLeft..rowRight) {
-            for (column in columnLeft..columnRight) {
+        for (row in (res - 1)..(height - res)) {
+            for (column in (res - 1)..(width - res)) {
                 result[row, column] = res
             }
         }
-        rowLeft++
-        columnLeft++
-        rowRight--
-        columnRight--
     }
-
     return result
 }
 
