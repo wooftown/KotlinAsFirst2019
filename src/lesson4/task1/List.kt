@@ -19,7 +19,6 @@ fun sqRoots(y: Double) =
         y == 0.0 -> listOf(0.0)
         else -> {
             val root = sqrt(y)
-            // Результат!
             listOf(-root, root)
         }
     }
