@@ -2,7 +2,9 @@
 
 package lesson6.task1
 
+import kotlinx.html.InputType
 import lesson2.task2.daysInMonth
+import java.lang.Character.isDigit
 
 /**
  * Пример
@@ -96,13 +98,7 @@ fun dateStrToDigit(str: String): String {
     val day = parts[0].toIntOrNull()
     val year = parts[2].toIntOrNull()
     val month = months.indexOf(parts[1])
-    if (month !in 1..12) {
-        return ""
-    }
-    if ((day == null) || (year == null)) {
-        return ""
-    }
-    if (day > daysInMonth(month, year)) {
+    if ((day == null) || (year == null) || (day > daysInMonth(month, year)) || (month !in 1..12)) {
         return ""
     }
     return String.format("%02d.%02d.%d", day, month, year)
@@ -125,16 +121,11 @@ fun dateDigitToStr(digital: String): String {
     }
     val day = parts[0].toIntOrNull()
     val year = parts[2].toIntOrNull()
-    if ((day == null) || (year == null)) {
-        return ""
-    }
-    if (parts[1].toInt() !in 1..12) {
+    if ((day == null) || (year == null) || (parts[1].toInt() !in 1..12) ||
+        (day > daysInMonth(parts[1].toInt(), year))) {
         return ""
     }
     val month = months[parts[1].toInt()]
-    if (day > daysInMonth(parts[1].toInt(), year)) {
-        return ""
-    }
     return String.format("%d %s %d", day, month, year)
 }
 
@@ -184,7 +175,6 @@ fun flattenPhoneNumber(phone: String): String {
                 return ""
             }
         }
-
     }
     return res.joinToString("")
 }
