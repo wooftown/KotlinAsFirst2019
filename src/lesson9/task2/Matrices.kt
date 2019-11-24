@@ -2,7 +2,9 @@
 
 package lesson9.task2
 
+import kotlinx.html.ThScope
 import lesson9.task1.*
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -481,10 +483,79 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  * 1 2 3 4 5 6 7 8 9 10 11 12 0 13 14 15   6==6
  */
+class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: Int) {
+    fun nearZero(): List<Cell> {
+        val list = mutableListOf<Cell>()
+        for ((i, j) in fifteenDir) {
+            if (zero.row + i in 0..3 && zero.column + j in 0..3) {
+                list.add(Cell(zero.row + i, zero.column + j))
+            }
+        }
+        return list
+    }
+}
 
+val fieldF = mapOf(
+    1 to Pair(0, 0), 2 to Pair(0, 1), 3 to Pair(0, 2),
+    4 to Pair(0, 3), 5 to Pair(1, 0), 6 to Pair(1, 1),
+    7 to Pair(1, 2), 8 to Pair(1, 3), 9 to Pair(2, 0),
+    10 to Pair(2, 1), 11 to Pair(2, 2), 12 to Pair(2, 3),
+    13 to Pair(3, 0), 14 to Pair(3, 1), 15 to Pair(3, 2),
+    0 to Pair(3, 3)
+)
+
+fun findF(matrix: Matrix<Int>): Int {
+    var f = 0
+    for (i in 0..3) {
+        for (j in 0..3) {
+            val x = matrix[i,j]
+            f += abs(fieldF.getValue(x).first - i) + abs(fieldF.getValue(x).second - j)
+        }
+    }
+    return f
+}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
-    TODO()
+    val winField = createMatrix(4, 4, 0)
+    for (i in 1..15) {
+        winField[(i - 1) / 4, (i - 1) % 4] = i
+    }
+    val winField2 = winField.copy()
+    winField2[3, 2] = 14
+    winField2[3, 1] = 15
+    if (matrix == winField || matrix == winField2) {
+        return listOf()
+    }
+    val passedFields = mutableSetOf<Matrix<Int>>()
+    val fieldsQueue = PriorityQueue<Field>(compareBy { it.f })
+    var zero = Cell(0, 0)
+    for (row in 0..3) {
+        for (column in 0..3) {
+            if (matrix[row, column] == 0) {
+                zero = Cell(row, column)
+            }
+        }
+    }
+    fieldsQueue.add(Field(matrix, listOf(), zero, findF(matrix)))
+    passedFields.add(matrix)
+    while (true) {
+        val next = fieldsQueue.poll()
+        for (move in next.nearZero()) {
+            val new = next.field.copy()
+            new[next.zero] = new[move]
+            new[move] = 0
+            val hops = next.hops.toMutableList()
+            hops.add(new[next.zero])
+            if (new == winField || new == winField2) {
+                return hops
+            }
+            if (new in passedFields) {
+                continue
+            }
+            passedFields.add(new)
+            fieldsQueue.add(Field(new, hops, move, findF(new)))
+        }
+    }
 }
 
 
