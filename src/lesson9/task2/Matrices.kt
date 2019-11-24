@@ -4,6 +4,7 @@ package lesson9.task2
 
 import kotlinx.html.ThScope
 import lesson9.task1.*
+import java.lang.IllegalStateException
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
@@ -508,11 +509,22 @@ fun findF(matrix: Matrix<Int>): Int {
     var f = 0
     for (i in 0..3) {
         for (j in 0..3) {
-            val x = matrix[i,j]
+            val x = matrix[i, j]
             f += abs(fieldF.getValue(x).first - i) + abs(fieldF.getValue(x).second - j)
         }
     }
     return f
+}
+
+fun findZero(matrix: Matrix<Int>): Cell? {
+    for (row in 0..3) {
+        for (column in 0..3) {
+            if (matrix[row, column] == 0) {
+                return Cell(row, column)
+            }
+        }
+    }
+    return null
 }
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
@@ -526,18 +538,16 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     if (matrix == winField || matrix == winField2) {
         return listOf()
     }
-    val passedFields = mutableSetOf<Matrix<Int>>()
+
+    val passedFields = mutableSetOf(matrix)
     val fieldsQueue = PriorityQueue<Field>(compareBy { it.f })
-    var zero = Cell(0, 0)
-    for (row in 0..3) {
-        for (column in 0..3) {
-            if (matrix[row, column] == 0) {
-                zero = Cell(row, column)
-            }
-        }
-    }
-    fieldsQueue.add(Field(matrix, listOf(), zero, findF(matrix)))
-    passedFields.add(matrix)
+    fieldsQueue.add(
+        Field(
+            matrix, listOf(),
+            findZero(matrix) ?: throw IllegalStateException("cant find zero"), findF(matrix)
+        )
+    )
+
     while (true) {
         val next = fieldsQueue.poll()
         for (move in next.nearZero()) {
