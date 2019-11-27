@@ -513,7 +513,6 @@ fun findF(matrix: Matrix<Int>): Int {
             f += abs(fieldF.getValue(x).first - i) + abs(fieldF.getValue(x).second - j)
         }
     }
-    println(f)
     return f
 }
 
