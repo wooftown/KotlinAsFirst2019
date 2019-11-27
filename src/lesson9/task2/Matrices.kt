@@ -483,6 +483,12 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  * 1 2 3 4 5 6 7 8 9 10 11 12 0 13 14 15   6==6
+ *
+ * getvalue[x] - 10.5 9.5
+ * [x] - 8.6 9.2
+ * [matrix] - 8.0
+ *
+ *
  */
 class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: Int) {
     fun nearZero(): List<Cell> {
@@ -509,8 +515,7 @@ fun findF(matrix: Matrix<Int>): Int {
     var f = 0
     for (i in 0..3) {
         for (j in 0..3) {
-            val x = matrix[i, j]
-            f += abs(fieldF.getValue(x).first - i) + abs(fieldF.getValue(x).second - j)
+            f += abs(fieldF[matrix[i, j]]!!.first - i) + abs(fieldF[matrix[i, j]]!!.second - j)
         }
     }
     return f
