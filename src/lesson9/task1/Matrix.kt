@@ -41,6 +41,17 @@ interface Matrix<E> {
         return list
     }
 
+    fun findCell(value: E): Cell? {
+        for (row in 0..3) {
+            for (column in 0..3) {
+                if (get(row, column) == 0) {
+                    return Cell(row, column)
+                }
+            }
+        }
+        return null
+    }
+
     /**
      * Запись в ячейку.
      * Методы могут бросить исключение, если ячейка не существует
@@ -83,7 +94,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, default: 
                 info == other.info
 
     override fun hashCode(): Int = info.hashCode()
-
 
     override fun toString(): String = info.joinToString { it.joinToString() }
 }

@@ -2,7 +2,6 @@
 
 package lesson9.task2
 
-import kotlinx.html.ThScope
 import lesson9.task1.*
 import java.lang.IllegalStateException
 import java.util.*
@@ -488,9 +487,9 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * \[x] - 8.6 9.2
  * \[matrix] - 8.0
  *
- *
  */
-class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: Int) {
+class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: Int){
+
     fun nearZero(): List<Cell> {
         val list = mutableListOf<Cell>()
         for ((i, j) in fifteenDir) {
@@ -502,7 +501,7 @@ class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: 
     }
 }
 
-val fieldF = mapOf(
+val heuristicField = mapOf(
     1 to Pair(0, 0), 2 to Pair(0, 1), 3 to Pair(0, 2),
     4 to Pair(0, 3), 5 to Pair(1, 0), 6 to Pair(1, 1),
     7 to Pair(1, 2), 8 to Pair(1, 3), 9 to Pair(2, 0),
@@ -515,22 +514,13 @@ fun findF(matrix: Matrix<Int>): Int {
     var f = 0
     for (i in 0..3) {
         for (j in 0..3) {
-            f += abs(fieldF[matrix[i, j]]!!.first - i) + abs(fieldF[matrix[i, j]]!!.second - j)
+            val x = heuristicField.getValue(matrix[i, j])
+            f += abs(x.first - i) + abs(x.second - j)
         }
     }
     return f
 }
 
-fun findZero(matrix: Matrix<Int>): Cell? {
-    for (row in 0..3) {
-        for (column in 0..3) {
-            if (matrix[row, column] == 0) {
-                return Cell(row, column)
-            }
-        }
-    }
-    return null
-}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winField = createMatrix(4, 4, 0)
@@ -549,7 +539,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     fieldsQueue.add(
         Field(
             matrix, listOf(),
-            findZero(matrix) ?: throw IllegalStateException("cant find zero"), findF(matrix)
+            matrix.findCell(0) ?: throw IllegalStateException("cant find zero"), findF(matrix)
         )
     )
 
