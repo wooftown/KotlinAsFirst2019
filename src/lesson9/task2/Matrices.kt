@@ -501,7 +501,7 @@ val fieldF = mapOf(
     4 to Pair(0, 3), 5 to Pair(1, 0), 6 to Pair(1, 1),
     7 to Pair(1, 2), 8 to Pair(1, 3), 9 to Pair(2, 0),
     10 to Pair(2, 1), 11 to Pair(2, 2), 12 to Pair(2, 3),
-    13 to Pair(3, 0), 14 to Pair(3, 1), 15 to Pair(3, 2),
+    13 to Pair(3, 1), 14 to Pair(3, 2), 15 to Pair(3, 3),
     0 to Pair(3, 3)
 )
 
@@ -513,6 +513,7 @@ fun findF(matrix: Matrix<Int>): Int {
             f += abs(fieldF.getValue(x).first - i) + abs(fieldF.getValue(x).second - j)
         }
     }
+    println(f)
     return f
 }
 
