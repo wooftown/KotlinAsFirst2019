@@ -488,19 +488,6 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
  * \[matrix] - 8.0
  *
  */
-class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell, val f: Int){
-
-    fun nearZero(): List<Cell> {
-        val list = mutableListOf<Cell>()
-        for ((i, j) in fifteenDir) {
-            if (zero.row + i in 0..3 && zero.column + j in 0..3) {
-                list.add(Cell(zero.row + i, zero.column + j))
-            }
-        }
-        return list
-    }
-}
-
 val heuristicField = mapOf(
     1 to Pair(0, 0), 2 to Pair(0, 1), 3 to Pair(0, 2),
     4 to Pair(0, 3), 5 to Pair(1, 0), 6 to Pair(1, 1),
@@ -510,17 +497,30 @@ val heuristicField = mapOf(
     0 to Pair(3, 3)
 )
 
-fun findF(matrix: Matrix<Int>): Int {
-    var f = 0
-    for (i in 0..3) {
-        for (j in 0..3) {
-            val x = heuristicField.getValue(matrix[i, j])
-            f += abs(x.first - i) + abs(x.second - j)
+class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell) {
+    val f = findF()
+    fun nearZero(): List<Cell> {
+        val list = mutableListOf<Cell>()
+        for ((i, j) in fifteenDir) {
+            if (zero.row + i in 0..3 && zero.column + j in 0..3) {
+                list.add(Cell(zero.row + i, zero.column + j))
+            }
         }
+        return list
     }
-    return f
-}
 
+    private fun findF(): Int {
+        var f = 0
+        for (i in 0..3) {
+            for (j in 0..3) {
+                val x = heuristicField.getValue(field[i, j])
+                f += abs(x.first - i) + abs(x.second - j)
+            }
+        }
+        return f
+    }
+
+}
 
 fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val winField = createMatrix(4, 4, 0)
@@ -537,12 +537,8 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
     val passedFields = mutableSetOf(matrix)
     val fieldsQueue = PriorityQueue<Field>(compareBy { it.f })
     fieldsQueue.add(
-        Field(
-            matrix, listOf(),
-            matrix.findCell(0) ?: throw IllegalStateException("cant find zero"), findF(matrix)
-        )
+        Field(matrix, listOf(), matrix.findCell(0) ?: throw IllegalStateException("cant find zero"))
     )
-
     while (true) {
         val next = fieldsQueue.poll()
         for (move in next.nearZero()) {
@@ -558,7 +554,7 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
                 continue
             }
             passedFields.add(new)
-            fieldsQueue.add(Field(new, hops, move, findF(new)))
+            fieldsQueue.add(Field(new, hops, move))
         }
     }
 }
