@@ -82,12 +82,8 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, default: 
                 width == other.width &&
                 info == other.info
 
-    override fun hashCode(): Int {
-        var result = 5
-        result = result * 31 + height
-        result = result * 31 + width
-        return result
-    }
+    override fun hashCode(): Int = info.hashCode()
+
 
     override fun toString(): String = info.joinToString { it.joinToString() }
 }
