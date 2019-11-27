@@ -499,6 +499,7 @@ val heuristicField = mapOf(
 
 class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell) {
     val f = findF()
+
     fun nearZero(): List<Cell> {
         val list = mutableListOf<Cell>()
         for ((i, j) in fifteenDir) {
@@ -515,6 +516,8 @@ class Field(val field: Matrix<Int>, val hops: List<Int>, val zero: Cell) {
             for (j in 0..3) {
                 val x = heuristicField.getValue(field[i, j])
                 f += abs(x.first - i) + abs(x.second - j)
+                // f += abs((field[i, j] - 1) / 4 - i) + abs((field[i, j] - 1) % 4 - j)
+                // можно и так , без heuristicField , но дольше , т.к учитывается только одно терминальное состояние
             }
         }
         return f
@@ -558,6 +561,5 @@ fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
         }
     }
 }
-
 
 
