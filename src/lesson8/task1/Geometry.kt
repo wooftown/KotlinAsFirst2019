@@ -222,13 +222,13 @@ fun minContainingCircle(vararg points: Point): Circle {
     val diameter = diameter(*points)
     val a = diameter.begin
     val b = diameter.end
-    var resultCircle = circleByDiameter(diameter)
-    for (point in pointsList.filter { it != a && it != b }) {
-        if (!resultCircle.contains(point)) {
-            resultCircle = circleWithThreePoints(a, b, point)
-        }
+    val resultCircle = circleByDiameter(diameter)
+    val c = pointsList.filter { it != a && it != b }.maxBy { it.distance(resultCircle.center) }
+    return if (!resultCircle.contains(c ?: a)) {
+        circleWithThreePoints(a, b, c!!)
+    } else {
+        resultCircle
     }
-    return resultCircle
 }
 
 fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
@@ -238,3 +238,4 @@ fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
         val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
         Circle(bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)), radius)
     }
+
