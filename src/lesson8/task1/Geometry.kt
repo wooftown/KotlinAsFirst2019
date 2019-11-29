@@ -232,7 +232,7 @@ fun minContainingCircle(vararg points: Point): Circle {
 }
 
 fun circleWithThreePoints(a: Point, b: Point, c: Point): Circle =
-    if (lineByPoints(a, b).angle == lineByPoints(b, c).angle) {
+    if (Triangle(a, b, c).area() == 0.0) {
         circleByDiameter(diameter(a, b, c))
     } else {
         val radius = a.distance(b) * a.distance(c) * b.distance(c) / (4 * Triangle(a, b, c).area())
